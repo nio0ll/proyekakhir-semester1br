@@ -2,6 +2,8 @@
 #include <fstream>
 using namespace std;
 
+int menu;
+
 struct TTL{
     string tempat;
     string tanggal;
@@ -42,6 +44,35 @@ struct PEMINJAMAN{
     bool status;
 };
 
+void menuperpustakaan(){
+    do {
+        cout << "\nDAFTAR PILIHAN\n1. Menu Anggota\n2. Menu Buku\n3. Menu Peminjaman\n4. Menu Petugas\n5. Keluar Program\nPILIHAN: ";
+        cin >> menu;
+        switch(menu){
+        case 1: //Menu Anggota
+            
+            break;
+        case 2: //Menu Buku
+            
+            break;
+        case 3: //Menu Peminjaman
+            
+            break;
+        case 4: //Menu Petugas
+            
+            break;
+        case 5: //Keluar Program
+            
+            break;
+        
+        default:
+            cout << "Pilihan tidak valid.";
+            break;
+        }
+    } while (menu!=5);
+}
+
 int main (){
+    menuperpustakaan();
     return 0;
 }
