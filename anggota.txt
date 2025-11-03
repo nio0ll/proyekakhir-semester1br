@@ -1,0 +1,4 @@
+
+001123|20100410|rania|tulungagung|lumajang 10-04-2010|rania@gmail.com|1
+002123|20091119|pita|tulungagung|tulungagung 19-11-2009|pita@gmail.com|1
+003123|99990101|zaraseva|boyolangu|boyolangu 01-01-9999|@ .com|1
