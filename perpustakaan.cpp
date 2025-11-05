@@ -72,7 +72,184 @@ void menuperpustakaan(){
     } while (menu!=5);
 }
 
+BUKU daftarBuku [100];
+int jumlahBuku = 0;
+
+void tambahBuku(){
+    cout << "\n=== Tambah Buku ===\n";
+    cin.ignore();
+
+    cout << "ID Buku        : ";
+    getline(cin, daftarBuku[jumlahBuku].id_buku);
+
+    cout << "ISBN           : ";
+    getline(cin, daftarBuku[jumlahBuku].isbn);
+
+    cout << "Judul          : ";
+    getline(cin, daftarBuku[jumlahBuku].judul);
+
+    cout << "Pengarang      : ";
+    getline(cin, daftarBuku[jumlahBuku].pengarang);
+
+    cout << "Penerbit       : ";
+    getline(cin, daftarBuku[jumlahBuku].penerbit);
+
+    cout << "Tahun Terbit   : ";
+    getline(cin, daftarBuku[jumlahBuku].tahun_terbit);
+
+    cout << "Stok           : ";
+    cin >> daftarBuku[jumlahBuku].stok;
+
+    jumlahBuku++;
+    cout << "Buku berhasil ditambahkan!\n";
+}
+
+
+void tampilBuku(){
+    if(jumlahBuku == 0){
+        cout << "Belum ada data buku.\n";
+        return;
+    }
+
+    
+    for(int i = 0; i < jumlahBuku - 1; i++){
+        for(int j = i+1; j < jumlahBuku; j++){
+            if(daftarBuku[i].judul > daftarBuku[j].judul){
+                swap(daftarBuku[i], daftarBuku[j]);
+            }
+        }
+    }
+
+    cout << "\n=== DAFTAR BUKU ===\n";
+    for(int i = 0; i < jumlahBuku; i++){
+        cout << "\nData ke-" << i+1 << endl;
+        cout << "ID Buku      : " << daftarBuku[i].id_buku << endl;
+        cout << "ISBN         : " << daftarBuku[i].isbn << endl;
+        cout << "Judul        : " << daftarBuku[i].judul << endl;
+        cout << "Pengarang    : " << daftarBuku[i].pengarang << endl;
+        cout << "Penerbit     : " << daftarBuku[i].penerbit << endl;
+        cout << "Tahun Terbit : " << daftarBuku[i].tahun_terbit << endl;
+        cout << "Stok         : " << daftarBuku[i].stok << endl;
+    }
+}
+
+void cariBuku(){
+    cin.ignore();
+    string judul;
+    cout << "\nMasukkan judul buku: ";
+    getline(cin, judul);
+
+    for(int i = 0; i < jumlahBuku; i++){
+        if(daftarBuku[i].judul == judul){
+            cout << "\n=== Buku Ditemukan ===\n";
+            cout << "ID Buku      : " << daftarBuku[i].id_buku << endl;
+            cout << "ISBN         : " << daftarBuku[i].isbn << endl;
+            cout << "Judul        : " << daftarBuku[i].judul << endl;
+            cout << "Pengarang    : " << daftarBuku[i].pengarang << endl;
+            cout << "Penerbit     : " << daftarBuku[i].penerbit << endl;
+            cout << "Tahun Terbit : " << daftarBuku[i].tahun_terbit << endl;
+            cout << "Stok         : " << daftarBuku[i].stok << endl;
+            return;
+        }
+    }
+
+    cout << "Buku tidak ditemukan!\n";
+}
+
+void editBuku(){
+    cin.ignore();
+    string id;
+    cout << "\nMasukkan ID buku yang mau diedit: ";
+    getline(cin, id);
+
+    for(int i = 0; i < jumlahBuku; i++){
+        if(daftarBuku[i].id_buku == id){
+            cout << "\n=== Edit Buku ===\n";
+
+            cout << "Judul baru        : ";
+            getline(cin, daftarBuku[i].judul);
+
+            cout << "Pengarang baru    : ";
+            getline(cin, daftarBuku[i].pengarang);
+
+            cout << "Penerbit baru     : ";
+            getline(cin, daftarBuku[i].penerbit);
+
+            cout << "Tahun Terbit baru : ";
+            getline(cin, daftarBuku[i].tahun_terbit);
+
+            cout << "Stok baru         : ";
+            cin >> daftarBuku[i].stok;
+
+            cout << "Data buku berhasil diperbarui!\n";
+            return;
+        }
+    }
+
+    cout << "ID buku tidak ditemukan.\n";
+}
+
+void hapusBuku(){
+    cin.ignore();
+    string id;
+    cout << "\nMasukkan ID buku yang mau dihapus: ";
+    getline(cin, id);
+
+    for(int i = 0; i < jumlahBuku; i++){
+        if(daftarBuku[i].id_buku == id){
+
+            
+            for(int j = i; j < jumlahBuku - 1; j++){
+                daftarBuku[j] = daftarBuku[j+1];
+            }
+
+            jumlahBuku--;
+            cout << "Buku berhasil dihapus!\n";
+            return;
+        }
+    }
+
+    cout << "ID buku tidak ditemukan.\n";
+}
+
+
+int main(){
+    int pilih;
+
+    while(true){
+        cout << "\n=== MENU BUKU ===\n";
+        cout << "1. Tambah Buku\n";
+        cout << "2. Tampil Buku\n";
+        cout << "3. Cari Buku\n";
+        cout << "4. Edit Buku\n";
+        cout << "5. Hapus Buku\n";
+        cout << "6. Keluar\n";
+        cout << "Pilih menu: ";
+        cin >> pilih;
+
+        switch(pilih){
+            case 1: tambahBuku(); break;
+            case 2: tampilBuku(); break;
+            case 3: cariBuku(); break;
+            case 4: editBuku(); break;
+            case 5: hapusBuku(); break;
+            case 6: 
+                cout << "Program selesai.\n";
+                return 0;
+            default:
+                cout << "Pilihan tidak valid!\n";
+        }
+    }
+    int main() {
+        tampilBuku();
+        tampilBuku();
+    }
+}
+
+
 int main (){
     menuperpustakaan();
     return 0;
+
+
 }
