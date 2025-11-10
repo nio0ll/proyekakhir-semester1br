@@ -116,6 +116,21 @@ void tambahanggota(ANGGOTA data[]){
     }
     fileOutput.close(); //03-11 krg rapi, revisi 
 }
+void daftaranggota(){
+    ifstream fileInput("anggota.txt");
+    if (fileInput.is_open()) {
+        string line;
+        cout << "\nDaftar Anggota:";
+        while (getline(fileInput, line)) {
+            cout << line << endl;
+        }
+        cout << "File berhasil dibuka!\n";
+        fileInput.close();
+    }
+    else {
+        cout << "File gagal dibuka!\n" << endl;
+    }
+}
 void menuperpustakaan(){
     do {
         cout << "\nDAFTAR PILIHAN\n1. Menu Anggota\n2. Menu Buku\n3. Menu Peminjaman\n4. Menu Petugas\n5. Keluar Program\nPILIHAN: ";
@@ -129,7 +144,7 @@ void menuperpustakaan(){
                     tambahanggota(data);
                 }
                 else if(menuanggota==2){//Daftar Anggota
-                    
+                    daftaranggota();
                 }
                 else if(menuanggota==3){//Cari Anggota
 
