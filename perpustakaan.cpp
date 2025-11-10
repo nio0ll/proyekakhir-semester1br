@@ -76,6 +76,7 @@ BUKU daftarBuku [100];
 int jumlahBuku = 0;
 
 void tambahBuku(){
+    fstream file ("buku.txt");
     cout << "\n=== Tambah Buku ===\n";
     cin.ignore();
 
@@ -106,6 +107,7 @@ void tambahBuku(){
 
 
 void tampilBuku(){
+    fstream file ("buku.txt");
     if(jumlahBuku == 0){
         cout << "Belum ada data buku.\n";
         return;
@@ -123,17 +125,18 @@ void tampilBuku(){
     cout << "\n=== DAFTAR BUKU ===\n";
     for(int i = 0; i < jumlahBuku; i++){
         cout << "\nData ke-" << i+1 << endl;
-        cout << "ID Buku      : " << daftarBuku[i].id_buku << endl;
-        cout << "ISBN         : " << daftarBuku[i].isbn << endl;
-        cout << "Judul        : " << daftarBuku[i].judul << endl;
-        cout << "Pengarang    : " << daftarBuku[i].pengarang << endl;
-        cout << "Penerbit     : " << daftarBuku[i].penerbit << endl;
-        cout << "Tahun Terbit : " << daftarBuku[i].tahun_terbit << endl;
-        cout << "Stok         : " << daftarBuku[i].stok << endl;
+        cout << "ID Buku: " << daftarBuku[i].id_buku << endl;
+        cout << "ISBN: " << daftarBuku[i].isbn << endl;
+        cout << "Judul: " << daftarBuku[i].judul << endl;
+        cout << "Pengarang: " << daftarBuku[i].pengarang << endl;
+        cout << "Penerbit: " << daftarBuku[i].penerbit << endl;
+        cout << "Tahun Terbit: " << daftarBuku[i].tahun_terbit << endl;
+        cout << "Stok: " << daftarBuku[i].stok << endl;
     }
 }
 
 void cariBuku(){
+    fstream file ("buku.txt");
     cin.ignore();
     string judul;
     cout << "\nMasukkan judul buku: ";
@@ -142,13 +145,13 @@ void cariBuku(){
     for(int i = 0; i < jumlahBuku; i++){
         if(daftarBuku[i].judul == judul){
             cout << "\n=== Buku Ditemukan ===\n";
-            cout << "ID Buku      : " << daftarBuku[i].id_buku << endl;
-            cout << "ISBN         : " << daftarBuku[i].isbn << endl;
-            cout << "Judul        : " << daftarBuku[i].judul << endl;
-            cout << "Pengarang    : " << daftarBuku[i].pengarang << endl;
-            cout << "Penerbit     : " << daftarBuku[i].penerbit << endl;
-            cout << "Tahun Terbit : " << daftarBuku[i].tahun_terbit << endl;
-            cout << "Stok         : " << daftarBuku[i].stok << endl;
+            cout << "ID Buku: " << daftarBuku[i].id_buku << endl;
+            cout << "ISBN: " << daftarBuku[i].isbn << endl;
+            cout << "Judul: " << daftarBuku[i].judul << endl;
+            cout << "Pengarang: " << daftarBuku[i].pengarang << endl;
+            cout << "Penerbit: " << daftarBuku[i].penerbit << endl;
+            cout << "Tahun Terbit: " << daftarBuku[i].tahun_terbit << endl;
+            cout << "Stok: " << daftarBuku[i].stok << endl;
             return;
         }
     }
@@ -157,28 +160,29 @@ void cariBuku(){
 }
 
 void editBuku(){
+    fstream file ("buku.txt");
     cin.ignore();
     string id;
-    cout << "\nMasukkan ID buku yang mau diedit: ";
+    cout << "\nMasukkan ID buku yang mau dicari: ";
     getline(cin, id);
 
     for(int i = 0; i < jumlahBuku; i++){
         if(daftarBuku[i].id_buku == id){
-            cout << "\n=== Edit Buku ===\n";
+            cout << "\n=== edit Buku ===\n";
 
-            cout << "Judul baru        : ";
+            cout << "Judul baru: ";
             getline(cin, daftarBuku[i].judul);
 
-            cout << "Pengarang baru    : ";
+            cout << "Pengarang baru: ";
             getline(cin, daftarBuku[i].pengarang);
 
-            cout << "Penerbit baru     : ";
+            cout << "Penerbit baru: ";
             getline(cin, daftarBuku[i].penerbit);
 
             cout << "Tahun Terbit baru : ";
             getline(cin, daftarBuku[i].tahun_terbit);
 
-            cout << "Stok baru         : ";
+            cout << "Stok baru: ";
             cin >> daftarBuku[i].stok;
 
             cout << "Data buku berhasil diperbarui!\n";
@@ -190,6 +194,7 @@ void editBuku(){
 }
 
 void hapusBuku(){
+    fstream file ("buku.txt");
     cin.ignore();
     string id;
     cout << "\nMasukkan ID buku yang mau dihapus: ";
@@ -212,8 +217,8 @@ void hapusBuku(){
     cout << "ID buku tidak ditemukan.\n";
 }
 
-
-int main(){
+    
+int main (){
     int pilih;
 
     while(true){
@@ -240,16 +245,6 @@ int main(){
                 cout << "Pilihan tidak valid!\n";
         }
     }
-    int main() {
-        tampilBuku();
-        tampilBuku();
-    }
-}
-
-
-int main (){
-    menuperpustakaan();
+    //menuperpustakaan();
     return 0;
-
-
 }
