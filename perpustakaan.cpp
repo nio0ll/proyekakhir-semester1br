@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 int menu;
@@ -41,8 +42,108 @@ struct PEMINJAMAN{
     string tanggal_pinjam;
     string tanggal_kembali;
     int denda;
-    bool status;
+    bool status; //0 = belum dikembalikan . 1 = sudah dikembalikan
 };
+
+bool cekkeaktifan(string id_anggota){
+    ifstream file("anggota.txt");
+    if (!file.is_open()) {
+        cout << "FILE TIDAK DITEMUKAN";
+        return false;
+    }
+
+    string line;
+    while(getline (file, line)) {
+        int pss1=0, pss2;
+        string data[7];
+        for (int i=0; i<7; i++) {
+            pss2 = line.find("|", pss1);
+            if(pss2 == string::npos) pss2 = line.size();
+            data[i] = line.substr(pss1, pss2-pss1);
+            pss1 = pss2 + 1;
+        }
+    
+        if(data[0] == id_anggota) {
+            file.close();
+            return data[6] == "!";
+        }
+    }
+    file.close();
+    return false;
+}
+
+bool cekstok(string id_buku) {
+    ifstream file("buku.txt");
+    if (!file.is_open()) {
+        cout << "FILE TIDAK DAPAT DIBUKA";
+    return false;
+}
+
+    string line;
+    while (getline(file, line)) {
+        int pss1 = 0, pss2;
+        string data[7];
+        for (int i=0; i<7; i++) {
+            pss2 = line.find("|", pss1);
+            if (pss2 == string::npos) pss2 = line.size(); 
+            data[i] = line.substr(pss1, pss2-pss1);
+            pss1  = pss2 +1;
+        }
+        if (data[0] == id_buku) {
+            int stok = stoi(data[6]);
+            file.close();
+            return stok > 0;
+        }
+        }
+    file.close();
+    return false; 
+}
+
+void kurangistok(string id_buku) {
+    ifstream file("buku.txt");
+    if (!file.is_open()) {
+        cout << "gagal";
+        return;
+    }
+    ofstream t("t.txt");
+    if (!t.is_open()) {
+        cout << "gagal";
+        return;
+    }
+    string line;
+    while (getline(file, line)) {
+        int pss1 = 0, pss2;
+        string data[7];
+        for (int i=0; i<7; i++) {
+            pss2=line.find("|", pss1);
+            if (pss2 == string::npos) pss2 = line.size();
+            data[i] = line.substr (pss1, pss2 - pss1);
+            pss1 = pss2 + 1;
+        }
+        if (data[0]== id_buku) {
+            int stok = stoi(data[6]);
+            stok++;
+            t << data[0] << "|" << data[1] << "|" << data[2] << "|" << data[3] << "|" << data[4] << "|" << data[5] << "|"<< stok << endl;
+        }
+        else {
+            t << line << endl;
+        }
+    }
+file.close();
+t.close();
+remove("buku.txt");
+rename("temp.txt", "buku.txt");
+}
+
+ void tambahstok(string id_buku) {};
+void tambahpeminjaman();
+void tampilpeminjaman();
+void caripeminjaman();
+void pengembalianbuku();
+void hitungdenda();
+
+
+
 
 void menuperpustakaan(){
     do {
