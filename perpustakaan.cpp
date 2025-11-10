@@ -71,6 +71,70 @@ void menuperpustakaan(){
         }
     } while (menu!=5);
 }
+void tambahPetugas () {
+    ofstream file("petugas.txt", ios ::app);
+    petugas p;
+    cin.ignore();
+    cout << "Masukkan Nama:";
+    getline (cin p.nama);
+    cout << "Masukkan Username";
+    getline (cin p.username);
+    cout << "Masukkan Password";
+    getline (cin p.password);
+    file << p.username << " " << p.password << " " << p.nama " " << endl;
+    file.close();
+    cout << "data petugas berhasil ditambahkan!";
+}
+void tampilPetugas() {
+    ifstream file("petugas.txt");
+    petugas p;
+    cout << "\n=== DAFTAR PETUGAS ===\n";
+    while (file >> p.username >> p.password) {
+        getline(file, p.nama);
+        if (!p.nama.empty() && p.nama[0] == '')p.nama.erase(0, 1);
+        cout << "nama: " << p.nama << "username: " << p.username << endl;
+        }
+        file.close();
+}
+bool loginPetugas (string username, string password) {
+    ifstream file("petugas.txt");
+    petugas p;
+    while (file << p.username << p.password) {
+        getline(file, p.nama);
+        if (p.username == username && p.password == password) {
+            file.close();
+            retrun true;
+        }
+    }
+    file.close();
+    return false;
+}
+int main() {
+    int pilih;
+    string user, pass;
+
+    do{
+        cout << "\n=== MENU PETUGAS ===\n";
+        cout << "1. Tambah Petugas\n";
+        cout << "2. Tampil Petugas\n";
+        cout << "3. Login Petugas\n";
+        cout << "keluar\n";
+        cin >> pilih;
+
+        if (pilih == 1) tambahPetugas();
+        else if (pilih == 2) tampilPetugas();
+        else if (pilih == 3) {
+            cout << "\nMasukkan Username: "; cin >> user;
+            cout << "Masukkan Password: "; cin >> pass;
+            if (loginPetugas(user, pass))
+            cout << "Login Berhasil Selamat Datang" << user << "!\n";
+            else 
+            cout << "Login Gagal!\n";
+        }
+    } while (pilih != 0);
+    cout << "Program Selesai.\n"
+    return 0;
+}
 
 int main (){
     menuperpustakaan();
