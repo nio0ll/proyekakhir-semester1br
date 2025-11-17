@@ -220,7 +220,7 @@ void tampilpeminjaman(){
     ifstream file("peminjaman.txt");
     if (!file.is_open()) {
         cout << "gagal";
-        return;
+        return;  
     }
     string line;
     cout << "\n Data Peminjaman \n";
@@ -335,38 +335,6 @@ float hitungdenda(int telat) {
     return 0;
 }
 
-
-
-
-void menuperpustakaan(){
-    do {
-        cout << "\nDAFTAR PILIHAN\n1. Menu Anggota\n2. Menu Buku\n3. Menu Peminjaman\n4. Menu Petugas\n5. Keluar Program\nPILIHAN: ";
-        cin >> menu;
-        switch(menu){
-        case 1: //Menu Anggota
-            
-            break;
-        case 2: //Menu Buku
-            
-            break;
-        case 3: //Menu Peminjaman
-            
-            break;
-        case 4: //Menu Petugas
-            
-            break;
-        case 5: //Keluar Program
-            
-            break;
-        
-        default:
-            cout << "Pilihan tidak valid.";
-            break;
-        }
-    } while (menu!=5);
-}
-
 int main (){
-    menuperpustakaan();
     return 0;
 }
