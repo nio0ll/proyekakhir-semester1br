@@ -4,7 +4,7 @@
 #include <sstream>
 using namespace std;
 
-int makshari, hitung, th, menu, menuanggota, menubuku, menupeminjaman, menupetugas, n, ambilnoanggotaterakhir, noanggotaterbaru;
+int makshari, hitung, th, menu, menuanggota, menubuku, menupeminjaman, menupetugas, n, ambilnoanggotaterakhir, noanggotaterbaru, jumlahBuku = 0;
 string baris, kode;
 bool kabisat;
 
@@ -249,6 +249,151 @@ void hapusanggota(){
         cout << "File gagal dibuka!\n";
     }
 }
+BUKU daftarBuku [100];
+void tambahBuku(){
+    fstream file ("buku.txt");
+    cout << "\n=== Tambah Buku ===\n";
+    cout << "\nJumlah anggota yang akan ditambah: ";
+    cin >> jumlahBuku;
+    cin.ignore();
+
+    cout << "ID Buku        : ";
+    getline(cin, daftarBuku[jumlahBuku].id_buku);
+
+    cout << "ISBN           : ";
+    getline(cin, daftarBuku[jumlahBuku].isbn);
+
+    cout << "Judul          : ";
+    getline(cin, daftarBuku[jumlahBuku].judul);
+
+    cout << "Pengarang      : ";
+    getline(cin, daftarBuku[jumlahBuku].pengarang);
+
+    cout << "Penerbit       : ";
+    getline(cin, daftarBuku[jumlahBuku].penerbit);
+
+    cout << "Tahun Terbit   : ";
+    getline(cin, daftarBuku[jumlahBuku].tahun_terbit);
+
+    cout << "Stok           : ";
+    cin >> daftarBuku[jumlahBuku].stok;
+
+    jumlahBuku++;
+    cout << "Buku berhasil ditambahkan!\n";
+}
+
+
+void tampilBuku(){
+    fstream file ("buku.txt");
+    if(jumlahBuku == 0){
+        cout << "Belum ada data buku.\n";
+        return;
+    }
+
+    
+    for(int i = 0; i < jumlahBuku - 1; i++){
+        for(int j = i+1; j < jumlahBuku; j++){
+            if(daftarBuku[i].judul > daftarBuku[j].judul){
+                swap(daftarBuku[i], daftarBuku[j]);
+            }
+        }
+    }
+
+    cout << "\n=== DAFTAR BUKU ===\n";
+    for(int i = 0; i < jumlahBuku; i++){
+        cout << "\nData ke-" << i+1 << endl;
+        cout << "ID Buku: " << daftarBuku[i].id_buku << endl;
+        cout << "ISBN: " << daftarBuku[i].isbn << endl;
+        cout << "Judul: " << daftarBuku[i].judul << endl;
+        cout << "Pengarang: " << daftarBuku[i].pengarang << endl;
+        cout << "Penerbit: " << daftarBuku[i].penerbit << endl;
+        cout << "Tahun Terbit: " << daftarBuku[i].tahun_terbit << endl;
+        cout << "Stok: " << daftarBuku[i].stok << endl;
+    }
+}
+
+void cariBuku(){
+    fstream file ("buku.txt");
+    cin.ignore();
+    string judul;
+    cout << "\nMasukkan judul buku: ";
+    getline(cin, judul);
+
+    for(int i = 0; i < jumlahBuku; i++){
+        if(daftarBuku[i].judul == judul){
+            cout << "\n=== Buku Ditemukan ===\n";
+            cout << "ID Buku: " << daftarBuku[i].id_buku << endl;
+            cout << "ISBN: " << daftarBuku[i].isbn << endl;
+            cout << "Judul: " << daftarBuku[i].judul << endl;
+            cout << "Pengarang: " << daftarBuku[i].pengarang << endl;
+            cout << "Penerbit: " << daftarBuku[i].penerbit << endl;
+            cout << "Tahun Terbit: " << daftarBuku[i].tahun_terbit << endl;
+            cout << "Stok: " << daftarBuku[i].stok << endl;
+            return;
+        }
+    }
+
+    cout << "Buku tidak ditemukan!\n";
+}
+
+void editBuku(){
+    fstream file ("buku.txt");
+    cin.ignore();
+    string id;
+    cout << "\nMasukkan ID buku yang mau dicari: ";
+    getline(cin, id);
+
+    for(int i = 0; i < jumlahBuku; i++){
+        if(daftarBuku[i].id_buku == id){
+            cout << "\n=== edit Buku ===\n";
+
+            cout << "Judul baru: ";
+            getline(cin, daftarBuku[i].judul);
+
+            cout << "Pengarang baru: ";
+            getline(cin, daftarBuku[i].pengarang);
+
+            cout << "Penerbit baru: ";
+            getline(cin, daftarBuku[i].penerbit);
+
+            cout << "Tahun Terbit baru : ";
+            getline(cin, daftarBuku[i].tahun_terbit);
+
+            cout << "Stok baru: ";
+            cin >> daftarBuku[i].stok;
+
+            cout << "Data buku berhasil diperbarui!\n";
+            return;
+        }
+    }
+
+    cout << "ID buku tidak ditemukan.\n";
+}
+
+void hapusBuku(){
+    fstream file ("buku.txt");
+    cin.ignore();
+    string id;
+    cout << "\nMasukkan ID buku yang mau dihapus: ";
+    getline(cin, id);
+
+    for(int i = 0; i < jumlahBuku; i++){
+        if(daftarBuku[i].id_buku == id){
+
+            
+            for(int j = i; j < jumlahBuku - 1; j++){
+                daftarBuku[j] = daftarBuku[j+1];
+            }
+
+            jumlahBuku--;
+            cout << "Buku berhasil dihapus!\n";
+            return;
+        }
+    }
+
+    cout << "ID buku tidak ditemukan.\n";
+}
+
 void menuperpustakaan(){
     do {
         cout << "\nDAFTAR PILIHAN\n1. Menu Anggota\n2. Menu Buku\n3. Menu Peminjaman\n4. Menu Petugas\n5. Keluar Program\nPILIHAN: ";
@@ -282,19 +427,19 @@ void menuperpustakaan(){
                 cout << "\nMENU BUKU\n1. Tambah Buku\n2. Daftar Buku\n3. Cari Buku\n4. Edit Buku\n5. Hapus Buku\n6. Keluar Menu Buku\nPILIHAN: ";
                 cin >> menubuku;
                 if(menubuku==1){//Tambah Buku
-                    
+                    tambahBuku();
                 }
                 else if(menubuku==2){//Daftar Buku
-                    
+                    tampilBuku();
                 }
                 else if(menubuku==3){//Cari Buku
-
+                    cariBuku();
                 }
                 else if(menubuku==4){//Edit Buku
-
+                    editBuku();
                 }
                 else if(menubuku==5){//Hapus Buku
-
+                    hapusBuku();
                 }
                 else if(menubuku==6){//Keluar Menu Buku
                 }
