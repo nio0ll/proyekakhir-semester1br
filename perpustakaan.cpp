@@ -296,7 +296,7 @@ void menuperpustakaan(){
                 else if(menubuku==5){//Hapus Buku
 
                 }
-                else if(menubuku==6){//Keluar Menu Anggota
+                else if(menubuku==6){//Keluar Menu Buku
                 }
                 else{
                     cout << "Pilihan tidak valid.";
@@ -304,10 +304,62 @@ void menuperpustakaan(){
             } while (menubuku!=6);
         }
         else if(menu==3){//Menu Peminjaman
-            
+            do {
+                cout << "\nMENU Peminjaman\n1. Cek Keaktifan\n2. Cek Stok\n3. Kurangi Stok\n4. Tambah Stok\n5. Tambah Peminjamn\n6. Tampil Peminjaman\n7. Cari Peminjaman\n8. Pengembalian Buku\n9. Hitung Denda\n10. Keluar Menu Peminjaman\nPILIHAN: ";
+                cin >> menupeminjaman;
+                if(menupeminjaman==1){//Cek Keaktifan
+                    
+                }
+                else if(menupeminjaman==2){//Cek Stok
+                    
+                }
+                else if(menupeminjaman==3){//Kurangi Stok
+
+                }
+                else if(menupeminjaman==4){//Tambah Stok
+
+                }
+                else if(menupeminjaman==5){//Tambah Peminjamn
+
+                }
+                else if(menupeminjaman==6){//Tampil Peminjamn
+
+                }
+                else if(menupeminjaman==7){//Cari Peminjaman
+
+                }
+                else if(menupeminjaman==8){//Pengembalian Buku
+
+                }
+                else if(menupeminjaman==9){//Hitung Denda
+
+                }
+                else if(menupeminjaman==10){//Keluar Menu Peminjaman
+                }
+                else{
+                    cout << "Pilihan tidak valid.";
+                }
+            } while (menupeminjaman!=10);
         }
         else if(menu==4){//Menu Petugas
-            
+            do {
+                cout << "\nMENU Petugas\n1. Tambah Petugas\n2. Tampil Petugas\n3. Login Petugas\n4. Keluar Menu Petugas\nPILIHAN: ";
+                cin >> menupetugas;
+                if(menupetugas==1){//Tambah Petugas
+                    
+                }
+                else if(menupetugas==2){//Tampil Petugas
+                    
+                }
+                else if(menupetugas==3){//Login Petugas
+
+                }
+                else if(menupetugas==10){//Keluar Menu Petugas
+                }
+                else{
+                    cout << "Pilihan tidak valid.";
+                }
+            } while (menupetugas!=4);
         }
         else if(menu==5){//Keluar Program
         }
