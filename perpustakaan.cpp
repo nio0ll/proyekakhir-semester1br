@@ -44,34 +44,6 @@ struct PEMINJAMAN{
     bool status;
 };
 
-void menuperpustakaan(){
-    do {
-        cout << "\nDAFTAR PILIHAN\n1. Menu Anggota\n2. Menu Buku\n3. Menu Peminjaman\n4. Menu Petugas\n5. Keluar Program\nPILIHAN: ";
-        cin >> menu;
-        switch(menu){
-        case 1: //Menu Anggota
-            
-            break;
-        case 2: //Menu Buku
-            
-            break;
-        case 3: //Menu Peminjaman
-            
-            break;
-        case 4: //Menu Petugas
-            
-            break;
-        case 5: //Keluar Program
-            
-            break;
-        
-        default:
-            cout << "Pilihan tidak valid.";
-            break;
-        }
-    } while (menu!=5);
-}
-
 BUKU daftarBuku [100];
 int jumlahBuku = 0;
 
@@ -112,7 +84,6 @@ void tampilBuku(){
         cout << "Belum ada data buku.\n";
         return;
     }
-
     
     for(int i = 0; i < jumlahBuku - 1; i++){
         for(int j = i+1; j < jumlahBuku; j++){
@@ -203,7 +174,6 @@ void hapusBuku(){
     for(int i = 0; i < jumlahBuku; i++){
         if(daftarBuku[i].id_buku == id){
 
-            
             for(int j = i; j < jumlahBuku - 1; j++){
                 daftarBuku[j] = daftarBuku[j+1];
             }
@@ -219,32 +189,5 @@ void hapusBuku(){
 
     
 int main (){
-    int pilih;
-
-    while(true){
-        cout << "\n=== MENU BUKU ===\n";
-        cout << "1. Tambah Buku\n";
-        cout << "2. Tampil Buku\n";
-        cout << "3. Cari Buku\n";
-        cout << "4. Edit Buku\n";
-        cout << "5. Hapus Buku\n";
-        cout << "6. Keluar\n";
-        cout << "Pilih menu: ";
-        cin >> pilih;
-
-        switch(pilih){
-            case 1: tambahBuku(); break;
-            case 2: tampilBuku(); break;
-            case 3: cariBuku(); break;
-            case 4: editBuku(); break;
-            case 5: hapusBuku(); break;
-            case 6: 
-                cout << "Program selesai.\n";
-                return 0;
-            default:
-                cout << "Pilihan tidak valid!\n";
-        }
-    }
-    //menuperpustakaan();
     return 0;
 }
