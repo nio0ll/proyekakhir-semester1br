@@ -55,8 +55,8 @@ bool cekkeaktifan(string id_anggota){
     string line;
     while(getline (file, line)) {
         int pss1=0, pss2;
-        string data[7];
-        for (int i=0; i<7; i++) {
+        string data[6];
+        for (int i=0; i<=6; i++) { 
             pss2 = line.find("|", pss1);
             if(pss2 == string::npos) pss2 = line.size();
             data[i] = line.substr(pss1, pss2-pss1);
@@ -82,8 +82,8 @@ bool cekstok(string id_buku) {
     string line;
     while (getline(file, line)) {
         int pss1 = 0, pss2;
-        string data[7];
-        for (int i=0; i<7; i++) {
+        string data[6];
+        for (int i=0; i<=6; i++) {
             pss2 = line.find("|", pss1);
             if (pss2 == string::npos) pss2 = line.size(); 
             data[i] = line.substr(pss1, pss2-pss1);
@@ -113,8 +113,8 @@ void kurangistok(string id_buku) {
     string line;
     while (getline(file, line)) {
         int pss1 = 0, pss2;
-        string data[7];
-        for (int i=0; i<7; i++) {
+        string data[6];
+        for (int i=0; i<=6; i++) {
             pss2=line.find("|", pss1);
             if (pss2 == string::npos) pss2 = line.size();
             data[i] = line.substr (pss1, pss2 - pss1);
@@ -132,15 +132,208 @@ void kurangistok(string id_buku) {
 file.close();
 t.close();
 remove("buku.txt");
-rename("temp.txt", "buku.txt");
+rename("t.txt", "buku.txt");
 }
 
- void tambahstok(string id_buku) {};
-void tambahpeminjaman();
-void tampilpeminjaman();
-void caripeminjaman();
-void pengembalianbuku();
-void hitungdenda();
+ void tambahstok(string id_buku) {
+    ifstream file("buku.txt");
+    if (!file.is_open()) {
+        cout << "gagal";
+        return;
+    }
+    ofstream t("t.txt");
+    if (!t.is_open()) {
+        cout << "gagal";
+        return;
+    }
+
+    string line;
+    while(getline(file, line)) {
+        int pss1 = 0, pss2;
+        string data[6];
+        for (int i=0; i<=6; i++) {
+            pss2 = line.find("|", pss1);
+            if (pss2 == string::npos) pss2 = line.size();
+                data[i] + line.substr(pss1, pss2 - pss1);
+                pss1 = pss2+1;
+        }
+        if (data[0] == id_buku) {
+            int stok = stoi(data[0]);
+            stok++;
+            t << data[0] << "|" << data[1] << "|" << data[2] << "|" << data[3] << "|" << data[4] << "|" << data[5] << "|" << stok << endl;
+        }
+        else {
+            t << line << endl;
+        }
+    }
+    file.close();
+    t.close();
+    remove("buku.close");
+    rename("t.txt", "buku.txt");
+ }
+void tambahpeminjaman() {
+    PEMINJAMAN p;
+    ofstream file("peminjaman.txt", ios::app);
+    if (!file.is_open()) {
+        cout << "gagal";
+        return;
+    }
+
+    cin.ignore();
+    cout << "\nTambah peminjam\n";
+    cout << "ID peminjaman (6 digit) : ";
+    getline(cin, p.id_peminjam);
+    cout << "ID Anggota : ";
+    getline(cin, p.id_anggota);
+    cout << "ID Buku : ";
+    getline(cin, p.id_buku);
+    cout << "ID Petugas : ";
+    getline(cin, p.id_petugas);
+
+    //cek keaktifan anggota dan stok buku
+    if (!cekkeaktifan(p.id_anggota)) {
+        cout << "anggoa tidak aktif";
+        file.close();
+        return;
+    }
+    if (!cekstok(p.id_buku)) {
+        cout << "buku tidak tersedia";
+        file.close();
+        return;
+    }
+
+    cout << "Tanggal pinjam : ";
+    getline(cin, p.tanggal_pinjam);
+    cout << "Tanggal Pengembalian : ";
+    getline(cin, p.tanggal_kembali);
+
+    p.denda = 0;
+    p.status = 1;
+    file << p.id_peminjam << "|" << p.id_anggota << "|" << p.id_buku << "|" << p.id_petugas << "|" << p.tanggal_pinjam << "|" << p.tanggal_kembali << "|" << p.denda << "|" << p.status << endl; 
+    
+    file.close();
+    kurangistok(p.id_buku);
+    cout << "peminjaman berhasil dirtambahkan";
+}
+
+void tampilpeminjaman(){
+    ifstream file("peminjaman.txt");
+    if (!file.is_open()) {
+        cout << "gagal";
+        return;
+    }
+    string line;
+    cout << "\n Data Peminjaman \n";
+    while (getline(file, line)) {
+        int pss1=0, pss2;
+        string data[7];
+        for (int i=0; i<=7; i++) {
+            pss2 = line.find("|", pss1);
+            if(pss2 == string::npos) pss2=line.size();
+            data[i]=line.substr(pss1,pss2-pss1);
+            pss1=pss2+1;
+        }
+        cout << "ID peminjaman : " << data[0] << endl;
+        cout << "ID anggota : " << data[1] << endl;
+        cout << "ID buku : " << data[2] << endl;
+        cout << "ID petugas : " << data[3] << endl;
+        cout << "pinjam : " << data[4] << endl;
+        cout << "kembali : " << data[5] << endl;
+        cout << "denda : " << data[6] << endl;
+        cout << "status : " << (data[7] == "!"?"dipinjam":"dikembalikan") << endl;
+    }
+    file.close();
+}
+
+void caripeminjaman() {
+    ifstream file("peminjaman.txt");
+    if (!file.is_open()) {
+        cout << "gagal";
+        return;
+    }
+
+    string cari, line;
+    bool ketemu = false;
+    cin.ignore();
+    cout << "\n ID peminjaman : "; //id peminjaman yang ingin dicari
+    getline(cin, cari);
+    while (getline(file, line)) {
+        int pss = line.find("|");
+        string id=line.substr(0, pss);
+        if (id==cari) {
+            cout << "\n data yang ditemukan : " << line << endl;
+            ketemu = true;
+            break;
+        }
+    }
+    if (!ketemu) cout << "\n data tidak ditemukan \n";
+    file.close();
+}
+
+void pengembalianbuku() {
+    fstream file("peminjaman.txt", ios :: in);
+    if (!file.is_open()) {
+        cout << "gagal";
+        return;
+    }
+    ofstream t("t.txt");
+    if (!file.is_open()) {
+        cout << "gagal";
+        return;
+    }
+
+    int hari;
+    float denda;
+    string cariID, line;
+    bool ketemu = false;
+    cin.ignore ();
+    cout << "ID pemijaman yang dikembalikan : ";
+    getline(cin, cariID);
+
+    while (getline(file, line)) {
+        int pss=line.find ("|");
+        string id=line.substr (0, pss);
+        if (id==cariID) {
+            ketemu = true;
+            cout << "jumlah hari telat : ";
+            cin >> hari;
+            float denda = hitungdenda(hari);
+
+            int pss7 = line.rfind("|");
+            string databaru = line.substr (0, pss7);
+            t << databaru << "|" << denda << "|0" << endl;
+
+            int pss1 = 0, pss2;
+            string data[8];
+            for (int i=0; i<8; i++) {
+                pss2 = line.find("|", pss1);
+                if (pss2 == string :: npos) pss2 = line.size();
+                data[i] = line.substr (pss1, pss2-pss1);
+                pss1 = pss2-1;
+            }
+            tambahstok (data[2]);
+            cout << "\n buku sudah dikembalikan" << "\n Denda Rp : " << denda << endl;
+        }
+        else {
+            t << line << endl;
+        }
+    }
+    file.close();
+    t.close();
+    remove ("peminjaman.txt");
+    rename ("t.txt", "peminjaman.txt");
+
+    if (!ketemu) 
+        cout << "data tidak ditemukan. \n";
+}
+
+
+float hitungdenda(int telat) {
+    if (telat > 7)
+    return (telat-7) * 1000;
+    else 
+    return 0;
+}
 
 
 
