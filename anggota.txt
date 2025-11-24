@@ -1,8 +1,1 @@
-001123|20100410|rania|tulungagung|lumajang 10-04-2010|rania@gmail.com|1
-002123|20091119|pita|tulungagung|tulungagung 19-11-2009|pita@gmail.com|1
-003123|99990101|zaraseva|boyolangu|boyolangu 01-01-9999|@ .com|1
-006123|20250421001|popi|tlg|byl 21-04-2025|jndsgjfk@gmail.com|1
-007123|20100131001|rre|rert|tr 31-01-2010|@.com|1
-008123|20100410001|gh|gh|gh 10-04-2010|@.com|1
-009123|20100410001|thr|tr|rge 10-04-2010|@.com|1
-010123|20100410004|fgfg|hghj|jkhj 10-04-2010|@gmail.com|0
+002123|20070228001|rere|jakarta|surabaya 28-02-2007|rere@gmail.com|1
