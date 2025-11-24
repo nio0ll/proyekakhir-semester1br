@@ -1,1 +1,2 @@
-002123|20070228001|rere|jakarta|surabaya 28-02-2007|rere@gmail.com|1
+002123|20070228001|rere|jakarta|surabaya 28-02-2007|rere@gmail.com|0
+003123|20000101001|tuut|p|p 01-01-2000|lulu@esemkita.com|0

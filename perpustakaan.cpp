@@ -4,7 +4,7 @@
 #include <sstream>
 using namespace std;
 
-int menu, menuanggota, menubuku, menupeminjaman, menupetugas;
+int menu, menuanggota, menubuku, menupeminjaman, menupetugas, menudaftaranggota;
 
 struct TTL{
     string tempat;
@@ -63,6 +63,19 @@ int nomoraggotaterakhir(){
     }
     fileInput.close();
     return noanggotaterakhir;
+}
+int nomorbukuterakhir(){
+    ifstream fileInput("buku.txt");
+    string baris;
+    int ambilnobukuterakhir, nobukuterakhir=0;
+    while (getline(fileInput, baris)){
+        if (baris.size()>=3&&isdigit(baris[0])){
+            ambilnobukuterakhir = stoi(baris.substr(0, 3));
+            if (ambilnobukuterakhir > nobukuterakhir) nobukuterakhir = ambilnobukuterakhir;
+        }
+    }
+    fileInput.close();
+    return nobukuterakhir;
 }
 string kembarkodeanggota(ANGGOTA data[], int i){
     ifstream file("anggota.txt");
@@ -128,26 +141,24 @@ void tambahanggota(ANGGOTA data[]){
             cout << "Email (Wajib @, dan .com):";
             getline(cin, data[i].email);
         } while(data[i].email.find('@')==string::npos||data[i].email.find(".com")==string::npos);
-        do {
-            cout << "Status (0=Nonaktif, 1=Aktif):";
-            cin >> data[i].status;
-            cin.ignore();
-        } while(data[i].status!=0&&data[i].status!=1);
+        data[i].status=1;
         //Simpan Id & Kode & Ttl
         noanggotaterbaru = nomoraggotaterakhir() + 1;
         data[i].id_anggota = (noanggotaterbaru<10?"00":(noanggotaterbaru<100?"0":""))+to_string(noanggotaterbaru)+"123";
         data[i].kode_anggota = data[i].ttl.tahun + data[i].ttl.bulan + data[i].ttl.tanggal;
         data[i].kode_anggota = kembarkodeanggota(data, i);
         data[i].ttl.gabung = data[i].ttl.tempat + " " + data[i].ttl.tanggal + "-" + data[i].ttl.bulan + "-" + data[i].ttl.tahun;
+        cout << "ID Anggota\t\t: " << data[i].id_anggota
+             << "\nKode Anggota\t\t: " << data[i].kode_anggota;
         //Simpan ke file
         if (fileOutput.is_open()){
             fileOutput << data[i].id_anggota << "|" << data[i].kode_anggota << "|" << data[i].nama << "|" <<
                           data[i].alamat     << "|" << data[i].ttl.gabung   << "|" << data[i].email<< "|" <<
                           data[i].status     << endl;
-            cout<<"Data berhasil dikirim!\n";
+            cout<<"\nData berhasil dikirim!\n";
         }
         else{
-            cout<<"Data gagal dikirim!\n";
+            cout<<"\nData gagal dikirim!\n";
         }
     }
     fileOutput.close(); //03-11 krg rapi, revisi 
@@ -156,7 +167,7 @@ void daftaranggota(){
     ifstream fileInput("anggota.txt");
     if (fileInput.is_open()) {
         string line;
-        cout << "\nDaftar Anggota:";
+        cout << "\nDaftar Anggota:\n";
         while (getline(fileInput, line)) {
             cout << line << endl;
         }
@@ -166,6 +177,25 @@ void daftaranggota(){
     else {
         cout << "File gagal dibuka!\n" << endl;
     }
+}
+void daftaranggotaaktif() {
+    ifstream fileInput("anggota.txt");
+    if (!fileInput.is_open()) {
+        cout << "File gagal dibuka!\n";
+        return;
+    }
+    string line;
+    cout << "\nDaftar Anggota Aktif:\n";
+    while (getline(fileInput, line)) {
+        int pos = line.rfind("|");
+        if (pos == string::npos) continue; //jika tdk ada sesuatu yg memnuhi syarat
+        string status = line.substr(pos + 1);
+        if (status == "1") {
+            cout << line << endl;
+        }
+    }
+    cout << "File berhasil dibuka!\n";
+    fileInput.close();
 }
 void carianggota(){
     ifstream fileInput("anggota.txt");
@@ -214,8 +244,9 @@ void hapusanggota(){
         ANGGOTA data;
         string teks, hapus;
         bool ketemu = false;
-        cout << "Masukkan ID anggota yang ingin dihapus: ";
+        cout << "Masukkan ID anggota yang ingin di-nonaktifkan: ";
         cin >> hapus;
+
         while (getline(fileInput, teks)){
             if (teks == "") continue;
             stringstream ss(teks);
@@ -227,28 +258,32 @@ void hapusanggota(){
             getline(ss, data.email, '|');
             getline(ss, data.sstatus);
 
-            if (data.id_anggota != hapus){
-                fileTemp << data.id_anggota << "|"
-                         << data.kode_anggota << "|"
-                         << data.nama << "|"
-                         << data.alamat << "|"
-                         << data.ttl.gabung << "|"
-                         << data.email << "|"
-                         << data.sstatus << endl;
-            }
-            else{
+            if (data.id_anggota == hapus){
                 ketemu = true;
-                cout << "\nData dengan ID " << hapus << " berhasil dihapus!\n";
+                data.sstatus = "0";  
+                cout << "\nStatus anggota ID " << hapus << " berhasil dihapus!\n";
             }
+
+            fileTemp << data.id_anggota << "|"
+                     << data.kode_anggota << "|"
+                     << data.nama << "|"
+                     << data.alamat << "|"
+                     << data.ttl.gabung << "|"
+                     << data.email << "|"
+                     << data.sstatus << endl;
         }
+
         if (!ketemu)
             cout << "\nData dengan ID " << hapus << " tidak ditemukan.\n";
+
         fileInput.close();
         fileTemp.close();
         remove("anggota.txt");
         rename("temp.txt", "anggota.txt");
+
         cout << "File sudah diperbarui!\n";
-    } else {
+    }
+    else {
         cout << "File gagal dibuka!\n";
     }
 }
@@ -275,7 +310,7 @@ void simpanKeFile(const BUKU &b) {
 }
 
 void tambahBuku() {
-    int jum;
+    int jum, nobukuterbaru;
     cout << "Masukkan jumlah buku yang akan ditambahkan: ";
     cin >> jum;
 
@@ -283,44 +318,39 @@ void tambahBuku() {
         BUKU b;
         cout << "\nData buku ke-" << i + 1 << endl;
 
-        do {
-            cout << "Masukkan ID Buku (6 karakter): ";
-            cin >> b.id_buku;
-
-            if (b.id_buku.length() != 6)
-                cout << "ID Buku harus 6 karakter!\n";
-        } while (b.id_buku.length() != 6);
+        nobukuterbaru = nomorbukuterakhir() + 1;
+        b.id_buku = (nobukuterbaru<10?"00":(nobukuterbaru<100?"0":""))+to_string(nobukuterbaru);
+        b.id_buku += b.id_buku;
+        cout << "ID Buku\t\t\t   : " << b.id_buku;
 
         do {
-            cout << "Masukkan ISBN (11 karakter): ";
+            cout << "\nMasukkan ISBN (11 karakter): ";
             cin >> b.isbn;
             if (b.isbn.length() != 11)
                 cout << "ISBN harus 11 karakter!\n";
         } while (b.isbn.length() != 11);
 
         cin.ignore();
-        cout << "Judul: ";
+        cout << "Judul\t\t\t   : ";
         getline(cin, b.judul);
 
-        cout << "Pengarang: ";
+        cout << "Pengarang\t\t   : ";
         getline(cin, b.pengarang);
 
-        cout << "Penerbit: ";
+        cout << "Penerbit\t\t   : ";
         getline(cin, b.penerbit);
 
-        cout << "Tahun Terbit: ";
-        cin >> b.tahun_terbit;
+        do {
+            cout << "Tahun terbit (0000)\t   : ";
+            getline(cin, b.tahun_terbit);
+        } while(b.tahun_terbit.length()!=4);
 
-        cout << "Stok: ";
+        cout << "Stok\t\t\t   : ";
         cin >> b.stok;
-
-        daftar[jumlah] = b;
-        jumlah++;
 
         simpanKeFile(b);
         cout << "Data buku berhasil ditambahkan!\n";
     }
-    cout << endl;
 }
 
 void tampilBuku() {
@@ -363,10 +393,10 @@ void cariBuku() {
                 cout << "ID Buku\t\t: " << cari.id_buku << endl;
                 cout << "ISBN\t\t: "     << cari.isbn << endl;
                 cout << "Judul\t\t: "     << cari.judul << endl;
-                cout << "Pengarang\t\t: "   << cari.pengarang << endl;
-                cout << "Penerbit\t\t: "      << cari.penerbit << endl;
-                cout << "Tahun terbit: "    << cari.tahun_terbit << endl;
-                cout << "Stok\t\t : "   << cari.sstok << endl;
+                cout << "Pengarang\t: "   << cari.pengarang << endl;
+                cout << "Penerbit\t: "      << cari.penerbit << endl;
+                cout << "Tahun terbit\t: "    << cari.tahun_terbit << endl;
+                cout << "Stok\t\t: "   << cari.sstok << endl;
                 ketemu = true;
                 break;
             }
@@ -414,7 +444,7 @@ void editBuku(){
                 cout << "Pengarang    : " << b.pengarang << endl;
                 cout << "Penerbit     : " << b.penerbit << endl;
                 cout << "Tahun Terbit : " << b.tahun_terbit << endl;
-                cout << "Stok         : " << b.stok << endl;
+                cout << "Stok         : " << b.sstok << endl;
 
                 string newisbn, newjudul, newpengarang, newpenerbit, newtahun, newstok;
 
@@ -528,8 +558,8 @@ bool cekkeaktifan(string id_anggota){
     string line;
     while(getline (file, line)) {
         int pss1=0, pss2;
-        string data[6];
-        for (int i=0; i<=6; i++) { 
+        string data[7];
+        for (int i=0; i<=7; i++) { 
             pss2 = line.find("|", pss1);
             if(pss2 == string::npos) pss2 = line.size();
             data[i] = line.substr(pss1, pss2-pss1);
@@ -538,7 +568,7 @@ bool cekkeaktifan(string id_anggota){
     
         if(data[0] == id_anggota) {
             file.close();
-            return data[6] == "!";
+            return data[7] == "!";
         }
     }
     file.close();
@@ -822,7 +852,11 @@ void menuperpustakaan(){
                     tambahanggota(data);
                 }
                 else if(menuanggota==2){//Daftar Anggota
-                    daftaranggota();
+                    cout << "\n1. Anggota Aktif\n2. Semua Anggota\nPILIHAN: ";
+                    cin >> menudaftaranggota;
+                    if(menudaftaranggota==1)daftaranggotaaktif();
+                    else if(menudaftaranggota==2)daftaranggota();
+                    else cout << "Pilihan tidak valid.";
                 }
                 else if(menuanggota==3){//Cari Anggota
                     carianggota();
