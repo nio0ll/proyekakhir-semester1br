@@ -290,7 +290,7 @@ int nomorbukuterakhir(){
     fileInput.close();
     return nobukuterakhir;
 }
-void simpanKeFile(const BUKU &b) {
+void simpanKeFile(const BUKU &b){
     ofstream file("buku.txt", ios::app);
     if (!file) {
         cout << "File gagal dibuka!\n";
@@ -307,7 +307,7 @@ void simpanKeFile(const BUKU &b) {
 
     file.close();
 }
-void tambahBuku() {
+void tambahBuku(){
     int jum, nobukuterbaru;
     cout << "Masukkan jumlah buku yang akan ditambahkan: ";
     cin >> jum;
@@ -350,7 +350,7 @@ void tambahBuku() {
         cout << "Data buku berhasil ditambahkan!\n";
     }
 }
-void tampilBuku() {
+void tampilBuku(){
     ifstream fileInput("buku.txt");
     if (fileInput.is_open()) {
         string line;
@@ -365,7 +365,7 @@ void tampilBuku() {
         cout << "File gagal dibuka!\n" << endl;
     }
 }
-void cariBuku() {
+void cariBuku(){
     ifstream fileInput("buku.txt");
     if(fileInput.is_open()){
         BUKU cari;
@@ -495,7 +495,7 @@ void editBuku(){
         }
     }
 }
-void hapusBuku() {
+void hapusBuku(){
     ifstream fileInput("buku.txt");
     ofstream fileTemp("h.txt");
     if (fileInput.is_open() && fileTemp.is_open()){
@@ -575,7 +575,7 @@ bool cekstok(string id_buku) {
 }
     BUKU buk;
     string line;
-    while (getline(file, line)) {
+    while (getline(file, line)){
         int pss1 = 0, pss2;
         string data[6];
         for (int i=0; i<=6; i++) {
@@ -593,7 +593,7 @@ bool cekstok(string id_buku) {
     file.close();
     return false; 
 }
-void kurangistok(string id_buku) {
+void kurangistok(string id_buku){
     ifstream file("buku.txt");
     if (!file.is_open()) {
         cout << "gagal";
@@ -628,7 +628,7 @@ t.close();
 remove("buku.txt");
 rename("t.txt", "buku.txt");
 }
-void tambahstok(string id_buku) {
+void tambahstok(string id_buku){
     ifstream file("buku.txt");
     if (!file.is_open()) {
         cout << "gagal";
@@ -663,8 +663,46 @@ void tambahstok(string id_buku) {
     t.close();
     remove("buku.close");
     rename("t.txt", "buku.txt");
- }
-void tambahpeminjaman() {
+}
+string formatTanggal(int d, int m, int y){
+    return to_string(d) + "-" + to_string(m) + "-" + to_string(y);
+}
+string tambah7hari(string tgl){
+    int d = stoi(tgl.substr(0,2));
+    int m = stoi(tgl.substr(3,2));
+    int y = stoi(tgl.substr(6,4));
+    d += 7;
+    int hariBulan[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+    if (d > hariBulan[m]) {
+        d -= hariBulan[m];
+        m++;
+        if (m > 12) {
+            m = 1;
+            y++;
+        }
+    }
+    string dd = (d < 10 ? "0" : "") + to_string(d);
+    string mm = (m < 10 ? "0" : "") + to_string(m);
+    string yy = to_string(y);
+    return dd + "-" + mm + "-" + yy;
+}
+int selisihTanggal(string t1, string t2){
+    int d1 = stoi(t1.substr(0, 2));
+    int m1 = stoi(t1.substr(3, 2));
+    int y1 = stoi(t1.substr(6, 4));
+
+    int d2 = stoi(t2.substr(0, 2));
+    int m2 = stoi(t2.substr(3, 2));
+    int y2 = stoi(t2.substr(6, 4));
+    int hariBulan[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+    auto total = [&](int d, int m, int y){
+        long jum = y * 365 + d;
+        for (int i=1; i<m; i++) jum += hariBulan[i];
+        return jum;
+    };
+    return total(d2,m2,y2) - total(d1,m1,y1);
+}
+void tambahpeminjaman(){
     PEMINJAMAN p;
     ofstream file("peminjaman.txt", ios::app);
     if (!file.is_open()) {
@@ -697,9 +735,7 @@ void tambahpeminjaman() {
 
     cout << "Tanggal pinjam : ";
     getline(cin, p.tanggal_pinjam);
-    cout << "Tanggal Pengembalian : ";
-    getline(cin, p.tanggal_kembali);
-
+    p.tanggal_kembali = tambah7hari(p.tanggal_pinjam);
     p.denda = 0;
     p.status = 1;
     file << p.id_peminjam << "|" << p.id_anggota << "|" << p.id_buku << "|" << p.id_petugas << "|" << p.tanggal_pinjam << "|" << p.tanggal_kembali << "|" << p.denda << "|" << p.status << endl; 
@@ -723,7 +759,7 @@ void tampilpeminjaman(){
             pss2 = line.find("|", pss1);
             if(pss2 == string::npos) pss2=line.size();
             data[i]=line.substr(pss1,pss2-pss1);
-            pss1=pss2+1;
+            pss1 = pss2 + 1;
         }
         cout << "ID peminjaman : " << data[0] << endl;
         cout << "ID anggota : " << data[1] << endl;
@@ -736,7 +772,7 @@ void tampilpeminjaman(){
     }
     file.close();
 }
-void caripeminjaman() {
+void caripeminjaman(){
     ifstream file("peminjaman.txt");
     if (!file.is_open()) {
         cout << "gagal";
@@ -760,13 +796,13 @@ void caripeminjaman() {
     if (!ketemu) cout << "\n data tidak ditemukan \n";
     file.close();
 }
-float hitungdenda(int telat) {
+float hitungdenda(int telat){
     if (telat > 7)
     return (telat-7) * 1000;
     else 
     return 0;
 }
-void pengembalianbuku() {
+void pengembalianbuku(){
     fstream file("peminjaman.txt", ios :: in);
     if (!file.is_open()) {
         cout << "gagal";
@@ -778,8 +814,6 @@ void pengembalianbuku() {
         return;
     }
 
-    int hari;
-    float denda;
     string cariID, line;
     bool ketemu = false;
     cin.ignore ();
@@ -787,44 +821,124 @@ void pengembalianbuku() {
     getline(cin, cariID);
 
     while (getline(file, line)) {
-        int pss=line.find ("|");
-        string id=line.substr (0, pss);
-        if (id==cariID) {
+        int pss1 = 0, pss2;
+        string data[8];
+        for (int i=0; i<8; i++) {
+            pss2 = line.find ("|", pss1);
+            if (pss2 == string::npos) pss2 = line.size();
+            data[i] = line.substr(pss1, pss2 - pss1);
+            pss1 = pss2 + 1;
+        }
+       // jika ketemu ID yang ingin dikembalikan
+        if (data[0] == cariID) {
             ketemu = true;
-            cout << "jumlah hari telat : ";
-            cin >> hari;
-            float denda = hitungdenda(hari);
 
-            int pss7 = line.rfind("|");
-            string databaru = line.substr (0, pss7);
-            t << databaru << "|" << denda << "|0" << endl;
+            string tanggalPinjam = data[4];
+            string batasKembali = data[5];   // tanggal kembali (auto + 7 hari)
+            
+            string tglSekarang;
+            cout << "Tanggal hari ini (DD-MM-YYYY): ";
+            getline(cin, tglSekarang);
+            int telat = selisihTanggal(batasKembali, tglSekarang);
+            if (telat < 0) telat = 0;
 
-            int pss1 = 0, pss2;
-            string data[8];
-            for (int i=0; i<8; i++) {
-                pss2 = line.find("|", pss1);
-                if (pss2 == string :: npos) pss2 = line.size();
-                data[i] = line.substr (pss1, pss2-pss1);
-                pss1 = pss2-1;
-            }
-            tambahstok (data[2]);
-            cout << "\n buku sudah dikembalikan" << "\n Denda Rp : " << denda << endl;
+            float denda = hitungdenda(telat);
+            t << data[0] << "|" << data[1] << "|" << data[2] << "|" << data[3] << "|" << data[4] << "|" << data[5] << "|" << denda << "|0" << endl;
+
+            tambahstok(data[2]);
+            cout << "\nBuku sudah dikembalikan\n";
+            cout << "Terlambat: " << telat << " hari\n";
+            cout << "Denda: Rp " << denda << "\n";
         }
         else {
             t << line << endl;
         }
     }
+
     file.close();
     t.close();
-    remove ("peminjaman.txt");
-    rename ("t.txt", "peminjaman.txt");
 
-    if (!ketemu) 
-        cout << "data tidak ditemukan. \n";
+    remove("peminjaman.txt");
+    rename("t.txt", "peminjaman.txt");
+
+    if (!ketemu)
+        cout << "ID peminjaman tidak ditemukan.\n";
 }
 
-//peminjaman
+void tambahPetugas(){
+    ofstream file("petugas.txt", ios::app);
 
+    int n;
+    cout << "\nJumlah petugas yang akan ditambah: ";
+    cin >> n;
+    cin.ignore();
+
+    PETUGAS p;
+
+    for (int i = 0; i < n; i++) {
+        cout << "Masukkan ID Petugas    | ";
+        getline(cin, p.id_petugas);
+
+        cout << "Masukkan Nama          | ";
+        getline(cin, p.nama);
+
+        cout << "Masukkan Username      | ";
+        getline(cin, p.username);
+
+        cout << "Masukkan Password      | ";
+        getline(cin, p.password);
+
+        file << p.id_petugas << "|"
+             << p.username << "|"
+             << p.password << "|"
+             << p.nama << endl;
+    }
+
+    file.close();
+    cout << "Data petugas berhasil ditambahkan!\n";
+}
+void tampilPetugas(){
+    ifstream file("petugas.txt");
+    PETUGAS p;
+    string baris;
+    cout << "\nDaftar Petugas\n";
+    while (getline(file, baris)){
+        getline(ss, p.id_petugas, '|');
+        getline(ss, p.username, '|');
+        getline(ss, p.password, '|');
+        getline(ss, p.nama);
+        if (!p.nama.empty() && p.nama[0] == ' ') p.nama.erase(0, 1);
+        stringstream ss(baris);
+
+        cout << "ID Petugas : " << p.id_petugas << endl;
+        cout << "Nama       : " << p.nama << endl;
+        cout << "Username   : " << p.username << endl;
+    }
+
+    file.close();
+}
+bool loginPetugas(string username, string password){
+    ifstream file("petugas.txt");
+    PETUGAS p;
+    string baris;
+    while (getline(file, baris)) {
+        stringstream ss(baris);
+        getline(ss, p.id_petugas, '|');
+        getline(ss, p.username, '|');
+        getline(ss, p.password, '|');
+        getline(ss, p.nama);
+        if (!p.nama.empty() && p.nama[0] == ' ')
+            p.nama.erase(0, 1);
+
+        if (p.username == username && p.password == password) {
+            file.close();
+            return true;
+        }
+    }
+
+    file.close();
+    return false;
+}
 
 int menu, menuanggota, menubuku, menupeminjaman, menupetugas, menudaftaranggota;
 void menuperpustakaan(){
@@ -936,7 +1050,14 @@ void menuperpustakaan(){
                     
                 }
                 else if(menupetugas==3){//Login Petugas
-
+                   int pilih;
+                   string user, pass;
+                   cout << "\nMasukkan Username : ";
+                   cin >> user;
+                   cout << "Masukkan Password : ";
+                   cin >> pass;
+                   if (loginPetugas(user, pass)) cout << "Login Berhasil!\n";
+                   else cout << "Login Gagal!\n";
                 }
                 else if(menupetugas==0){//Keluar Menu Petugas
                 }
