@@ -1044,10 +1044,10 @@ void menuperpustakaan(){
                 cout << "\nMENU Petugas\n1. Tambah Petugas\n2. Tampil Petugas\n3. Login Petugas\n0. Keluar Menu Petugas\nPILIHAN: ";
                 cin >> menupetugas;
                 if(menupetugas==1){//Tambah Petugas
-                    
+                    tambahPetugas();
                 }
                 else if(menupetugas==2){//Tampil Petugas
-                    
+                    tampilPetugas();
                 }
                 else if(menupetugas==3){//Login Petugas
                    int pilih;
