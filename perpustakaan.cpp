@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <limits>
 
 using namespace std;
 
@@ -89,7 +90,7 @@ void tambahanggota(ANGGOTA data[]){
     cout << "\nJumlah anggota yang akan ditambah: ";
     cin >> n;
     cin.ignore();
-    //Input Nama, Alamat, Ttl, Email, Status
+    // Input Nama, Alamat, Ttl, Email, Status
     for(int i=0;i<n;i++){
         cout << "Nama\t\t\t:";
         getline(cin, data[i].nama);
@@ -318,7 +319,6 @@ void tambahBuku(){
 
         nobukuterbaru = nomorbukuterakhir() + 1;
         b.id_buku = (nobukuterbaru<10?"00":(nobukuterbaru<100?"0":""))+to_string(nobukuterbaru);
-        b.id_buku += b.id_buku;
         cout << "ID Buku\t\t\t   : " << b.id_buku;
 
         do {
@@ -467,7 +467,13 @@ void editBuku(){
 
                 cout << "Stok baru: ";
                 getline(cin, newstok);
-                if(newstok == "") newstok = b.stok;;
+                // REVISI: Konversi stok ke int untuk konsistensi. Asli: if(newstok == "") newstok = b.stok; (tipe data campur). Sekarang cek dan konversi.
+                int stokBaru;
+                if(newstok == "") {
+                    stokBaru = b.stok;  // Tetap int
+                } else {
+                    stokBaru = stoi(newstok);  // Konversi string ke int
+                }
 
                 fileTemp << b.id_buku << "|"
                          << newisbn << "|"
@@ -475,7 +481,7 @@ void editBuku(){
                          << newpengarang << "|"
                          << newpenerbit << "|"
                          << newtahun << "|"
-                         << newstok << endl;
+                         << stokBaru << endl;  // Output sebagai int
 
             } else {
                 fileTemp << teks << endl;
@@ -552,7 +558,7 @@ bool cekkeaktifan(string id_anggota){
     while(getline (file, line)) {
         int pss1=0, pss2;
         string data[7];
-        for (int i=0; i<=7; i++) { 
+        for (int i=0; i<7; i++) {               // <-- ubah 8 -> 7
             pss2 = line.find("|", pss1);
             if(pss2 == string::npos) pss2 = line.size();
             data[i] = line.substr(pss1, pss2-pss1);
@@ -561,7 +567,7 @@ bool cekkeaktifan(string id_anggota){
     
         if(data[0] == id_anggota) {
             file.close();
-            return data[7] == "!";
+            return data[6] == "1";
         }
     }
     file.close();
@@ -577,14 +583,15 @@ bool cekstok(string id_buku) {
     string line;
     while (getline(file, line)){
         int pss1 = 0, pss2;
-        string data[6];
-        for (int i=0; i<=6; i++) {
+        string data[7];
+        for (int i=0; i<7; i++) {
             pss2 = line.find("|", pss1);
             if (pss2 == string::npos) pss2 = line.size(); 
             data[i] = line.substr(pss1, pss2-pss1);
             pss1  = pss2 +1;
         }
-        if (data[0] == buk.id_buku) {
+        // REVISI: Bandingkan dengan id_buku (parameter). Asli: if (data[0] == buk.id_buku); (buk.id_buku kosong, selalu false).
+        if (data[0] == id_buku) {
             int stok = stoi(data[6]);
             file.close();
             return stok > 0;
@@ -607,8 +614,8 @@ void kurangistok(string id_buku){
     string line;
     while (getline(file, line)) {
         int pss1 = 0, pss2;
-        string data[6];
-        for (int i=0; i<=6; i++) {
+        string data[7];               // <-- gunakan 7 field
+        for (int i=0; i<7; i++) {     // <-- loop sampai 7
             pss2=line.find("|", pss1);
             if (pss2 == string::npos) pss2 = line.size();
             data[i] = line.substr (pss1, pss2 - pss1);
@@ -616,17 +623,17 @@ void kurangistok(string id_buku){
         }
         if (data[0]== id_buku) {
             int stok = stoi(data[6]);
-            stok++;
+            stok--;
             t << data[0] << "|" << data[1] << "|" << data[2] << "|" << data[3] << "|" << data[4] << "|" << data[5] << "|"<< stok << endl;
         }
         else {
             t << line << endl;
         }
     }
-file.close();
-t.close();
-remove("buku.txt");
-rename("t.txt", "buku.txt");
+    file.close();
+    t.close();
+    remove("buku.txt");
+    rename("t.txt", "buku.txt");
 }
 void tambahstok(string id_buku){
     ifstream file("buku.txt");
@@ -635,7 +642,7 @@ void tambahstok(string id_buku){
         return;
     }
     ofstream t("t.txt");
-    if (!t.is_open()) {
+    if (!t.is_open()) {  // REVISI: Cek t.is_open(), bukan file.is_open(). Asli: if (!file.is_open()) { ... } (salah, menyebabkan file t tidak dicek).
         cout << "gagal";
         return;
     }
@@ -643,16 +650,18 @@ void tambahstok(string id_buku){
     string line;
     while(getline(file, line)) {
         int pss1 = 0, pss2;
-        string data[6];
-        for (int i=0; i<=6; i++) {
+        string data[7];  // REVISI: Ubah ke [7] untuk konsistensi (7 field: id, isbn, judul, pengarang, penerbit, tahun, stok).
+        for (int i=0; i<7; i++) {  // REVISI: Loop hingga 7 untuk hindari out of bounds.
             pss2 = line.find("|", pss1);
             if (pss2 == string::npos) pss2 = line.size();
-                data[i] + line.substr(pss1, pss2 - pss1);
-                pss1 = pss2+1;
+            // REVISI: Assign dengan =, bukan +. Asli: data[i] + line.substr... (salah, tidak assign, menyebabkan data kosong).
+            data[i] = line.substr(pss1, pss2 - pss1);
+            pss1 = pss2+1;
         }
-        if (data[0] == buk.id_buku) {
-            int stok = stoi(data[0]);
-            stok++;
+        // REVISI: Bandingkan dengan id_buku. Asli: if (data[0] == buk.id_buku); (buk.id_buku kosong).
+        if (data[0] == id_buku) {
+            int stok = stoi(data[6]);
+            stok++;  // Tambah stok untuk pengembalian
             t << data[0] << "|" << data[1] << "|" << data[2] << "|" << data[3] << "|" << data[4] << "|" << data[5] << "|" << stok << endl;
         }
         else {
@@ -661,7 +670,8 @@ void tambahstok(string id_buku){
     }
     file.close();
     t.close();
-    remove("buku.close");
+    // REVISI: Nama file benar. Asli: remove("buku.close"); (salah, harus "buku.txt").
+    remove("buku.txt");
     rename("t.txt", "buku.txt");
 }
 string formatTanggal(int d, int m, int y){
@@ -710,10 +720,15 @@ void tambahpeminjaman(){
         return;
     }
 
-    cin.ignore();
+    // Clear input buffer safely (penting setelah `cin >>` di menu)
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
     cout << "\nTambah peminjam\n";
-    cout << "ID peminjaman (6 digit) : ";
-    getline(cin, p.id_peminjam);
+    do {
+        cout << "ID peminjaman (6 digit) : ";
+        getline(cin, p.id_peminjam);
+        if (p.id_peminjam.length() != 6) cout << "ID harus 6 digit!\n";  // REVISI: Tambah validasi panjang ID.
+    } while (p.id_peminjam.length() != 6);
     cout << "ID Anggota : ";
     getline(cin, p.id_anggota);
     cout << "ID Buku : ";
@@ -733,8 +748,14 @@ void tambahpeminjaman(){
         return;
     }
 
-    cout << "Tanggal pinjam : ";
+    cout << "Tanggal pinjam (DD-MM-YYYY): ";
     getline(cin, p.tanggal_pinjam);
+    // REVISI: Tambah validasi format tanggal sederhana untuk hindari crash di stoi().
+    if (p.tanggal_pinjam.length() != 10 || p.tanggal_pinjam[2] != '-' || p.tanggal_pinjam[5] != '-') {
+        cout << "Format tanggal salah (DD-MM-YYYY)!\n";
+        file.close();
+        return;
+    }
     p.tanggal_kembali = tambah7hari(p.tanggal_pinjam);
     p.denda = 0;
     p.status = 1;
@@ -742,7 +763,7 @@ void tambahpeminjaman(){
     
     file.close();
     kurangistok(p.id_buku);
-    cout << "peminjaman berhasil dirtambahkan";
+    cout << "peminjaman berhasil ditambahkan";
 }
 void tampilpeminjaman(){
     ifstream file("peminjaman.txt");
@@ -751,11 +772,11 @@ void tampilpeminjaman(){
         return;  
     }
     string line;
-    cout << "\n Data Peminjaman \n";
+    cout << "\nData Peminjaman \n";
     while (getline(file, line)) {
         int pss1=0, pss2;
-        string data[7];
-        for (int i=0; i<=7; i++) {
+        string data[8];  // REVISI: Ubah ke [8] untuk 8 field (id_peminjam, id_anggota, id_buku, id_petugas, tanggal_pinjam, tanggal_kembali, denda, status).
+        for (int i=0; i<8; i++) {  // REVISI: Loop hingga 8 untuk hindari out of bounds.
             pss2 = line.find("|", pss1);
             if(pss2 == string::npos) pss2=line.size();
             data[i]=line.substr(pss1,pss2-pss1);
@@ -768,7 +789,8 @@ void tampilpeminjaman(){
         cout << "pinjam : " << data[4] << endl;
         cout << "kembali : " << data[5] << endl;
         cout << "denda : " << data[6] << endl;
-        cout << "status : " << (data[7] == "!"?"dipinjam":"dikembalikan") << endl;
+        // REVISI: Cek status dengan "1" (dipinjam) atau "0" (dikembalikan). Asli: (data[7] == "!"?"dipinjam":"dikembalikan") (salah, selalu "dipinjam").
+        cout << "status : " << (data[7] == "1" ? "dipinjam" : "dikembalikan") << endl;
     }
     file.close();
 }
@@ -809,21 +831,21 @@ void pengembalianbuku(){
         return;
     }
     ofstream t("t.txt");
-    if (!file.is_open()) {
+    if (!t.is_open()) {  // REVISI: Cek t.is_open(). Asli: if (!file.is_open()) { ... } (salah, menyebabkan file t tidak dicek).
         cout << "gagal";
         return;
     }
 
     string cariID, line;
     bool ketemu = false;
-    cin.ignore ();
-    cout << "ID pemijaman yang dikembalikan : ";
+    // REVISI: Hapus cin.ignore() jika tidak perlu, atau pindah ke akhir. Asli: cin.ignore(); (bisa menyebabkan skip input).
+    cout << "ID peminjaman yang dikembalikan : ";
     getline(cin, cariID);
 
     while (getline(file, line)) {
         int pss1 = 0, pss2;
-        string data[8];
-        for (int i=0; i<8; i++) {
+        string data[8];  // REVISI: Ubah ke [8] untuk 8 field.
+        for (int i=0; i<8; i++) {  // REVISI: Loop hingga 8 untuk hindari out of bounds.
             pss2 = line.find ("|", pss1);
             if (pss2 == string::npos) pss2 = line.size();
             data[i] = line.substr(pss1, pss2 - pss1);
@@ -839,6 +861,11 @@ void pengembalianbuku(){
             string tglSekarang;
             cout << "Tanggal hari ini (DD-MM-YYYY): ";
             getline(cin, tglSekarang);
+            // REVISI: Tambah validasi format tanggal.
+            if (tglSekarang.length() != 10 || tglSekarang[2] != '-' || tglSekarang[5] != '-') {
+                cout << "Format tanggal salah (DD-MM-YYYY)!\n";
+                continue;  // Lewatkan jika salah
+            }
             int telat = selisihTanggal(batasKembali, tglSekarang);
             if (telat < 0) telat = 0;
 
@@ -903,12 +930,12 @@ void tampilPetugas(){
     string baris;
     cout << "\nDaftar Petugas\n";
     while (getline(file, baris)){
+        stringstream ss(baris);
         getline(ss, p.id_petugas, '|');
         getline(ss, p.username, '|');
         getline(ss, p.password, '|');
         getline(ss, p.nama);
         if (!p.nama.empty() && p.nama[0] == ' ') p.nama.erase(0, 1);
-        stringstream ss(baris);
 
         cout << "ID Petugas : " << p.id_petugas << endl;
         cout << "Nama       : " << p.nama << endl;
@@ -943,7 +970,10 @@ bool loginPetugas(string username, string password){
 int menu, menuanggota, menubuku, menupeminjaman, menupetugas, menudaftaranggota;
 void menuperpustakaan(){
     do {
-        cout << "\nDAFTAR PILIHAN\n1. Menu Anggota\n2. Menu Buku\n3. Menu Peminjaman\n4. Menu Petugas\n0. Keluar Program\nPILIHAN: ";
+        cout << "\033[1;36m"
+           << R"====ASCII====(──★ ˙ ̟⪩⪨ Daftar Pilihan Bukuku !!)====ASCII====" 
+           << "\033[0m"
+           << "\n1. Menu Anggota\n2. Menu Buku\n3. Menu Peminjaman\n4. Menu Petugas\n0. Keluar Program\nPILIHAN: ";
         cin >> menu;
         if(menu==1){//Menu Anggota
             do {
@@ -1075,8 +1105,7 @@ void menuperpustakaan(){
 }
 
 int main (){
-
-    menuperpustakaan();
+menuperpustakaan();
 
     return 0;
 }
