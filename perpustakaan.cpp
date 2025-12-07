@@ -1029,46 +1029,67 @@ void menuperpustakaan(){
                 }
             } while (menubuku!=0);
         }
-        else if(menu==3){//Menu Peminjaman
-            do {
-                cout << "\nMENU Peminjaman\n1. Cek Keaktifan\n2. Cek Stok\n3. Kurangi Stok\n4. Tambah Stok\n5. Tambah Peminjamn\n6. Tampil Peminjaman\n7. Cari Peminjaman\n8. Pengembalian Buku\n9. Hitung Denda\n0. Keluar Menu Peminjaman\nPILIHAN: ";
-                cin >> menupeminjaman;
-                string id_anggota, id_buku;
-                int telat;
-                if(menupeminjaman==1){//Cek Keaktifan
-                    cekkeaktifan(id_anggota);
-                }
-                else if(menupeminjaman==2){//Cek Stok
-                    cekstok(id_buku);
-                }
-                else if(menupeminjaman==3){//Kurangi Stok
-                    kurangistok(id_buku);
-                }
-                else if(menupeminjaman==4){//Tambah Stok
-                    tambahstok(id_buku);
-                }
-                else if(menupeminjaman==5){//Tambah Peminjamn
-                    tambahpeminjaman();
-                }
-                else if(menupeminjaman==6){//Tampil Peminjamn
-                    tampilpeminjaman();
-                }
-                else if(menupeminjaman==7){//Cari Peminjaman
-                    caripeminjaman();
-                }
-                else if(menupeminjaman==8){//Pengembalian Buku
-                    pengembalianbuku();
-                }
-                else if(menupeminjaman==9){//Hitung Denda
-                    hitungdenda(telat);
-                }
-                else if(menupeminjaman==0){//Keluar Menu Peminjaman
-                }
-                else{
-                    cout << "Pilihan tidak valid.";
-                }
-            } while (menupeminjaman!=0);
+else if(menu==3){//Menu Peminjaman
+    do {
+        cout << "\nMENU Peminjaman\n1. Cek Keaktifan\n2. Cek Stok\n3. Kurangi Stok\n4. Tambah Stok\n5. Tambah Peminjamn\n6. Tampil Peminjaman\n7. Cari Peminjaman\n8. Pengembalian Buku\n9. Hitung Denda\n0. Keluar Menu Peminjaman\nPILIHAN: ";
+        cin >> menupeminjaman;
+        string id_anggota, id_buku;
+        int telat;
+        if(menupeminjaman==1){//Cek Keaktifan
+            cout << "Masukkan ID Anggota: ";
+            cin >> id_anggota;
+            if (cekkeaktifan(id_anggota)) {
+                cout << "Anggota aktif.\n";
+            } else {
+                cout << "Anggota tidak aktif atau tidak ditemukan.\n";
+            }
         }
+        else if(menupeminjaman==2){//Cek Stok
+            cout << "Masukkan ID Buku: ";
+            cin >> id_buku;
+            if (cekstok(id_buku)) {
+                cout << "Stok tersedia.\n";
+            } else {
+                cout << "Stok tidak tersedia atau buku tidak ditemukan.\n";
+            }
+        }
+        else if(menupeminjaman==3){//Kurangi Stok
+            cout << "Masukkan ID Buku: ";
+            cin >> id_buku;
+            kurangistok(id_buku);
+            cout << "Stok buku berhasil dikurangi (jika ID valid).\n";
+        }
+        else if(menupeminjaman==4){//Tambah Stok
+            cout << "Masukkan ID Buku: ";
+            cin >> id_buku;
+            tambahstok(id_buku);
+            cout << "Stok buku berhasil ditambah (jika ID valid).\n";
+        }
+        else if(menupeminjaman==5){//Tambah Peminjamn
+            tambahpeminjaman();
+        }
+        else if(menupeminjaman==6){//Tampil Peminjamn
+            tampilpeminjaman();
+        }
+        else if(menupeminjaman==7){//Cari Peminjaman
+            caripeminjaman();
+        }
+        else if(menupeminjaman==8){//Pengembalian Buku
+            pengembalianbuku();
+        }
+        else if(menupeminjaman==9){//Hitung Denda
+            cout << "Masukkan jumlah hari terlambat: ";
+            cin >> telat;
+            cout << "Denda: Rp " << hitungdenda(telat) << endl;
+        }
+        else if(menupeminjaman==0){//Keluar Menu Peminjaman
+        }
+        else{
+            cout << "Pilihan tidak valid.";
+        }
+    } while (menupeminjaman!=0);
+}
+
         else if(menu==4){//Menu Petugas
             do {
                 cout << "\nMENU Petugas\n1. Tambah Petugas\n2. Tampil Petugas\n3. Login Petugas\n0. Keluar Menu Petugas\nPILIHAN: ";
