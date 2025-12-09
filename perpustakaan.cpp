@@ -56,6 +56,78 @@ struct PEMINJAMAN {
     int status;
 };
 
+void tambahPetugas(int n) {
+    ofstream file("petugas.txt", ios::app);
+
+    PETUGAS p;
+
+    for (int i = 0; i < n; i++) {
+        cout << "\nMasukkan ID Petugas: ";
+        getline(cin, p.id_petugas);
+
+        cout << "Masukkan Nama      : ";
+        getline(cin, p.nama);
+
+        cout << "Masukkan Username  : ";
+        getline(cin, p.username);
+
+        cout << "Masukkan Password  : ";
+        getline(cin, p.password);
+
+        file << p.id_petugas << "|"
+             << p.username << "|"
+             << p.password << "|"
+             << p.nama << endl;
+    }
+
+    file.close();
+    cout << "\nData petugas berhasil ditambahkan!\n";
+}
+
+void tampilPetugas() {
+    ifstream file("petugas.txt");
+    PETUGAS p;
+    string baris;
+    cout << "\nDaftar Petugas\n";
+    while (getline(file, baris)) {
+        stringstream ss(baris);
+        getline(ss, p.id_petugas, '|');
+        getline(ss, p.username, '|');
+        getline(ss, p.password, '|');
+        getline(ss, p.nama);
+        if (!p.nama.empty() && p.nama[0] == ' ') p.nama.erase(0, 1);
+
+        cout << "ID Petugas : " << p.id_petugas << endl;
+        cout << "Nama       : " << p.nama << endl;
+        cout << "Username   : " << p.username << endl << endl;
+    }
+
+    file.close();
+}
+
+bool loginPetugas(string username, string password) {
+    ifstream file("petugas.txt");
+    PETUGAS p;
+    string baris;
+    while (getline(file, baris)) {
+        stringstream ss(baris);
+        getline(ss, p.id_petugas, '|');
+        getline(ss, p.username, '|');
+        getline(ss, p.password, '|');
+        getline(ss, p.nama);
+        if (!p.nama.empty() && p.nama[0] == ' ')
+            p.nama.erase(0, 1);
+
+        if (p.username == username && p.password == password) {
+            file.close();
+            return true;
+        }
+    }
+
+    file.close();
+    return false;
+}
+
 void urutanggota() {
     ANGGOTA data[999];
     int n = 0;
@@ -1000,78 +1072,6 @@ void pengembalianbuku() {
 
     if (!ketemu)
         cout << "\nID Peminjaman tidak ditemukan.\n";
-}
-
-void tambahPetugas(int n) {
-    ofstream file("petugas.txt", ios::app);
-
-    PETUGAS p;
-
-    for (int i = 0; i < n; i++) {
-        cout << "\nMasukkan ID Petugas: ";
-        getline(cin, p.id_petugas);
-
-        cout << "Masukkan Nama      : ";
-        getline(cin, p.nama);
-
-        cout << "Masukkan Username  : ";
-        getline(cin, p.username);
-
-        cout << "Masukkan Password  : ";
-        getline(cin, p.password);
-
-        file << p.id_petugas << "|"
-             << p.username << "|"
-             << p.password << "|"
-             << p.nama << endl;
-    }
-
-    file.close();
-    cout << "\nData petugas berhasil ditambahkan!\n";
-}
-
-void tampilPetugas() {
-    ifstream file("petugas.txt");
-    PETUGAS p;
-    string baris;
-    cout << "\nDaftar Petugas\n";
-    while (getline(file, baris)) {
-        stringstream ss(baris);
-        getline(ss, p.id_petugas, '|');
-        getline(ss, p.username, '|');
-        getline(ss, p.password, '|');
-        getline(ss, p.nama);
-        if (!p.nama.empty() && p.nama[0] == ' ') p.nama.erase(0, 1);
-
-        cout << "ID Petugas : " << p.id_petugas << endl;
-        cout << "Nama       : " << p.nama << endl;
-        cout << "Username   : " << p.username << endl << endl;
-    }
-
-    file.close();
-}
-
-bool loginPetugas(string username, string password) {
-    ifstream file("petugas.txt");
-    PETUGAS p;
-    string baris;
-    while (getline(file, baris)) {
-        stringstream ss(baris);
-        getline(ss, p.id_petugas, '|');
-        getline(ss, p.username, '|');
-        getline(ss, p.password, '|');
-        getline(ss, p.nama);
-        if (!p.nama.empty() && p.nama[0] == ' ')
-            p.nama.erase(0, 1);
-
-        if (p.username == username && p.password == password) {
-            file.close();
-            return true;
-        }
-    }
-
-    file.close();
-    return false;
 }
 
 int pilihan, menu, menuanggota, menubuku, menupeminjaman, menupetugas, menudaftaranggota;
