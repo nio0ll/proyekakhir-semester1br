@@ -56,6 +56,54 @@ struct PEMINJAMAN {
     int status;
 };
 
+void urutanggota() {
+    ANGGOTA data[999];
+    int n = 0;
+
+    ifstream file("anggota.txt");
+    string baris;
+
+    // load file
+    while (getline(file, baris)) {
+        stringstream ss(baris);
+
+        getline(ss, data[n].id_anggota, '|');
+        getline(ss, data[n].kode_anggota, '|');
+        getline(ss, data[n].nama, '|');
+        getline(ss, data[n].alamat, '|');
+        getline(ss, data[n].ttl.gabung, '|');
+        getline(ss, data[n].email, '|');
+        ss >> data[n].status;
+
+        n++;
+    }
+    file.close();
+
+    // bubble sort berdasarkan nama
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (data[j].nama > data[j+1].nama) {
+                ANGGOTA temp = data[j];
+                data[j] = data[j+1];
+                data[j+1] = temp;
+            }
+        }
+    }
+
+    // tulis ulang file setelah diurutkan
+    ofstream out("anggota.txt");
+    for (int i = 0; i < n; i++) {
+        out << data[i].id_anggota << "|"
+            << data[i].kode_anggota << "|"
+            << data[i].nama << "|"
+            << data[i].alamat << "|"
+            << data[i].ttl.gabung << "|"
+            << data[i].email << "|"
+            << data[i].status << endl;
+    }
+    out.close();
+}
+
 string kembarkodeanggota() {
     ifstream file("anggota.txt");
     ANGGOTA data;
@@ -138,6 +186,7 @@ void tambahanggota() {
         }
     }
     fileOutput.close();
+    urutanggota();
 }
 
 void daftaranggota() {
@@ -179,10 +228,10 @@ void carianggota() {
     ifstream fileInput("anggota.txt");
     if (fileInput.is_open()) {
         ANGGOTA cari;
-        string cariid, teks;
+        string carikode, teks;
         bool ketemu = false;
-        cout << "\nInput ID anggota yang dicari: ";
-        cin >> cariid;
+        cout << "\nInput kode anggota yang dicari: ";
+        cin >> carikode;
         while (getline(fileInput, teks)) {
             stringstream ss(teks);
             getline(ss, cari.id_anggota, '|');
@@ -193,7 +242,7 @@ void carianggota() {
             getline(ss, cari.email, '|');
             getline(ss, cari.sstatus);
 
-            if (cari.id_anggota == cariid) {
+            if (cari.kode_anggota == carikode) {
                 cout << "\nData Ditemukan!\n\n";
                 cout << "ID Anggota: " << cari.id_anggota << endl;
                 cout << "Kode\t  : " << cari.kode_anggota << endl;
@@ -207,7 +256,7 @@ void carianggota() {
             }
         }
         if (!ketemu) {
-            cout << "\nData dengan ID " << cariid << " tidak ditemukan.\n";
+            cout << "\nData dengan kode " << carikode << " tidak ditemukan.\n";
         }
         fileInput.close();
         cout << "\nFile berhasil dibuka!\n";
@@ -223,9 +272,9 @@ void hapusanggota() {
         ANGGOTA data;
         string teks, hapus;
         bool ketemu = false;
-        cout << "\nMasukkan ID anggota yang ingin di-nonaktifkan: ";
+        cout << "\nMasukkan kode anggota yang ingin di-nonaktifkan: ";
         cin >> hapus;
-
+        cin.ignore();
         while (getline(fileInput, teks)) {
             if (teks == "") continue;
             stringstream ss(teks);
@@ -237,10 +286,10 @@ void hapusanggota() {
             getline(ss, data.email, '|');
             getline(ss, data.sstatus);
 
-            if (data.id_anggota == hapus) {
+            if (data.kode_anggota == hapus) {
                 ketemu = true;
                 data.sstatus = "0";
-                cout << "\nStatus anggota ID " << hapus << " berhasil dihapus!\n";
+                cout << "\nData dengan kode " << hapus << " berhasil dihapus!\n";
             }
 
             fileTemp << data.id_anggota << "|"
@@ -253,7 +302,7 @@ void hapusanggota() {
         }
 
         if (!ketemu)
-            cout << "\nData dengan ID " << hapus << " tidak ditemukan.\n";
+            cout << "\nData dengan kode " << hapus << " tidak ditemukan.\n";
 
         fileInput.close();
         fileTemp.close();
@@ -264,6 +313,54 @@ void hapusanggota() {
     } else {
         cout << "\nFile gagal dibuka!\n";
     }
+}
+
+void urutbuku() {
+    BUKU data[999];
+    int n = 0;
+
+    ifstream file("buku.txt");
+    string baris;
+
+    // load file id, isbn, judul, pengarang, penerbit, tahun terbit, stok
+    while (getline(file, baris)) {
+        stringstream ss(baris);
+
+        getline(ss, data[n].id_buku, '|');
+        getline(ss, data[n].isbn, '|');
+        getline(ss, data[n].judul, '|');
+        getline(ss, data[n].pengarang, '|');
+        getline(ss, data[n].penerbit, '|');
+        getline(ss, data[n].tahun_terbit, '|');
+        ss >> data[n].sstok;
+
+        n++;
+    }
+    file.close();
+
+    // bubble sort berdasarkan judul
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (data[j].judul > data[j+1].judul) {
+                BUKU temp = data[j];
+                data[j] = data[j+1];
+                data[j+1] = temp;
+            }
+        }
+    }
+
+    // tulis ulang file setelah diurutkan
+    ofstream out("buku.txt");
+    for (int i = 0; i < n; i++) {
+        out << data[i].id_buku << "|"
+            << data[i].isbn << "|"
+            << data[i].judul << "|"
+            << data[i].pengarang << "|"
+            << data[i].penerbit << "|"
+            << data[i].tahun_terbit << "|"
+            << data[i].sstok << endl;
+    }
+    out.close();
 }
 
 void tambahBuku() {
@@ -304,6 +401,7 @@ void tambahBuku() {
 
         cout << "Stok\t\t\t   : ";
         cin >> b.stok;
+        cin.ignore();
 
         if (file.is_open()) {
             file << b.id_buku << "|"
@@ -319,6 +417,7 @@ void tambahBuku() {
         }
     }
     file.close();
+    urutbuku();
 }
 
 void tampilBuku() {
@@ -471,20 +570,26 @@ void editBuku() {
             cout << "\nData buku berhasil diedit!\n";
         }
     }
+    urutbuku();
 }
 
 void hapusBuku() {
     ifstream fileInput("buku.txt");
-    ofstream fileTemp("h.txt");
-    if (fileInput.is_open() && fileTemp.is_open()) {
+    ofstream fileTemp("buku_temp.txt");      // file sementara untuk buku tersisa
+    ofstream fileHapus("hapusbuku.txt", ios::app); // file untuk buku yang dihapus
+
+    if (fileInput.is_open() && fileTemp.is_open() && fileHapus.is_open()) {
         BUKU data;
         string teks, hapus;
         bool ketemu = false;
+
         cout << "\nMasukkan judul buku yang ingin dihapus: ";
         cin.ignore();
         getline(cin, hapus);
+
         while (getline(fileInput, teks)) {
             if (teks == "") continue;
+
             stringstream ss(teks);
             getline(ss, data.id_buku, '|');
             getline(ss, data.isbn, '|');
@@ -495,6 +600,7 @@ void hapusBuku() {
             getline(ss, data.sstok);
 
             if (data.judul != hapus) {
+                // tulis ke file sementara untuk buku yang tersisa
                 fileTemp << data.id_buku << "|"
                          << data.isbn << "|"
                          << data.judul << "|"
@@ -503,17 +609,33 @@ void hapusBuku() {
                          << data.tahun_terbit << "|"
                          << data.sstok << endl;
             } else {
+                // tulis ke file hapusbuku.txt
+                fileHapus << data.id_buku << "|"
+                          << data.isbn << "|"
+                          << data.judul << "|"
+                          << data.pengarang << "|"
+                          << data.penerbit << "|"
+                          << data.tahun_terbit << "|"
+                          << data.sstok << endl;
+
                 ketemu = true;
-                cout << "\nBuku dengan judul " << hapus << " berhasil dihapus!\n";
+                cout << "\nBuku dengan judul \"" << hapus << "\" berhasil dihapus!\n";
             }
         }
+
         if (!ketemu)
-            cout << "\nBuku dengan judul " << hapus << " tidak ditemukan.\n";
+            cout << "\nBuku dengan judul \"" << hapus << "\" tidak ditemukan.\n";
+
         fileInput.close();
         fileTemp.close();
-        remove("buku.txt");
-        rename("h.txt", "buku.txt");
-        cout << "\nFile sudah diperbarui!\n";
+        fileHapus.close();
+
+        // replace file lama dengan file sementara
+        remove("buku.txt");           // hapus file lama
+        rename("buku_temp.txt", "buku.txt"); // ganti dengan file baru
+
+        cout << "\nFile buku.txt sudah diperbarui!\n";
+        cout << "Buku yang dihapus disimpan di hapusbuku.txt\n";
     } else {
         cout << "\nFile gagal dibuka!\n";
     }
@@ -710,7 +832,7 @@ void tambahpeminjaman() {
         if (p.id_buku.length() != 6) cout << "ID harus 6 digit!\n";
     } while (p.id_buku.length() != 6);
     cout << "ID Petugas : ";
-    gdo {
+    do {
         cout << "\nID Petugas (6 digit)    : ";
         getline(cin, p.id_petugas);
         if (p.id_petugas.length() != 6) cout << "ID harus 6 digit!\n";
@@ -923,7 +1045,7 @@ void tampilPetugas() {
 
         cout << "ID Petugas : " << p.id_petugas << endl;
         cout << "Nama       : " << p.nama << endl;
-        cout << "Username   : " << p.username << endl;
+        cout << "Username   : " << p.username << endl << endl;
     }
 
     file.close();
@@ -956,8 +1078,8 @@ int pilihan, menu, menuanggota, menubuku, menupeminjaman, menupetugas, menudafta
 
 void menuperpustakaan() {
     do {
-        cout << "\033[1;36m"
-             << endl
+        cout << endl
+             << "\033[1;36m"
              << R"====ASCII====(──★ ˙ ̟⪩⪨ Selamat Datang !!)====ASCII===="
              << "\033[0m"
              << "\n1. Buat Akun\n2. Masuk\n0. Keluar\nPilihan: ";
@@ -986,13 +1108,21 @@ void menuperpustakaan() {
                             } else if (menuanggota == 2) {
                                 cout << "\n1. Anggota Aktif\n2. Semua Anggota\nPILIHAN: ";
                                 cin >> menudaftaranggota;
-                                if (menudaftaranggota == 1) daftaranggotaaktif();
-                                else if (menudaftaranggota == 2) daftaranggota();
-                                else cout << "Pilihan tidak valid.";
-                            } else if (menuanggota == 3) carianggota();
-                            else if (menuanggota == 4) hapusanggota();
-                            else if (menuanggota == 0);
-                            else cout << "\nPilihan tidak valid.\n";
+                                if (menudaftaranggota == 1) {
+                                    daftaranggotaaktif();
+                                } else if (menudaftaranggota == 2) {
+                                    daftaranggota();
+                                } else {
+                                    cout << "Pilihan tidak valid.";
+                                }
+                            } else if (menuanggota == 3) {
+                                carianggota();
+                            } else if (menuanggota == 4) {
+                                hapusanggota();
+                            } else if (menuanggota == 0) {
+                            } else {
+                                cout << "\nPilihan tidak valid.\n";
+                            }
                         } while (menuanggota != 0);
                     } else if (menu == 2) {
                         do {
@@ -1060,6 +1190,65 @@ void menuperpustakaan() {
 }
 
 int main() {
+    system("chcp 65001 >nul"); 
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(
+                                             _______________________
+   _______________________-------------------                       `\
+ /:--__                                                              |
+||< > |                                   ___________________________/
+| \__/_________________-------------------                         |
+|                                                                  |
+ |                 )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====(______       _          _)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(                        |
+ |                 )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====(| ___ \     | |        | |)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(                       |
+  |                )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====(| |_/ /_   _| | ___   _| | ___   _)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(                |
+  |                )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====(| ___ \ | | | |/ / | | | |/ / | | |)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(               |
+  |                )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====(| |_/ / |_| |   <| |_| |   <| |_| |)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(               |
+  |                )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====(\____/ \__,_|_|\_\\__,_|_|\_\\__,_|)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(                |
+   |                                                                  |
+   |          )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====(Nikmati akses cepat ke koleksi buku digital kami)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(        |
+   |                )====ASCII====";
+    cout << "\033[1;37m";
+    cout << R"====ASCII====( baca kapan saja, di mana saja.)====ASCII====";
+    cout << "\033[1;33m";
+    cout << R"====ASCII====(                  |
+  |                                              _________________  _|_
+  |  ___________________-------------------------                      `\
+  |/`--_                                                                 |
+  ||[ ]||                                            ___________________/
+   \===/___________________--------------------------
+
+               )====ASCII====";
+
+    cout << "\033[0m\n"; //reset warna
     menuperpustakaan();
     return 0;
 }
