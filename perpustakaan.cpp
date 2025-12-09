@@ -57,7 +57,7 @@ struct PEMINJAMAN {
 };
 
 void tambahPetugas(int n) {
-    ofstream file("petugas.txt", ios::app);
+    ofstream file("petugas.dat", ios::app);
 
     PETUGAS p;
 
@@ -85,7 +85,7 @@ void tambahPetugas(int n) {
 }
 
 void tampilPetugas() {
-    ifstream file("petugas.txt");
+    ifstream file("petugas.dat");
     PETUGAS p;
     string baris;
     cout << "\nDaftar Petugas\n";
@@ -99,14 +99,14 @@ void tampilPetugas() {
 
         cout << "ID Petugas : " << p.id_petugas << endl;
         cout << "Nama       : " << p.nama << endl;
-        cout << "Username   : " << p.username << endl << endl;
+        cout << "Username   : " << p.username << endl;
     }
 
     file.close();
 }
 
 bool loginPetugas(string username, string password) {
-    ifstream file("petugas.txt");
+    ifstream file("petugas.dat");
     PETUGAS p;
     string baris;
     while (getline(file, baris)) {
@@ -132,7 +132,7 @@ void urutanggota() {
     ANGGOTA data[999];
     int n = 0;
 
-    ifstream file("anggota.txt");
+    ifstream file("anggota.dat");
     string baris;
 
     // load file
@@ -163,7 +163,7 @@ void urutanggota() {
     }
 
     // tulis ulang file setelah diurutkan
-    ofstream out("anggota.txt");
+    ofstream out("anggota.dat");
     for (int i = 0; i < n; i++) {
         out << data[i].id_anggota << "|"
             << data[i].kode_anggota << "|"
@@ -177,7 +177,7 @@ void urutanggota() {
 }
 
 string kembarkodeanggota() {
-    ifstream file("anggota.txt");
+    ifstream file("anggota.dat");
     ANGGOTA data;
     int hitung = 0;
     string baris, kode;
@@ -197,7 +197,7 @@ string kembarkodeanggota() {
 }
 
 void tambahanggota() {
-    ofstream fileOutput("anggota.txt", ios::app);
+    ofstream fileOutput("anggota.dat", ios::app);
     ANGGOTA data;
     int makshari, th, n;
     bool kabisat;
@@ -262,7 +262,7 @@ void tambahanggota() {
 }
 
 void daftaranggota() {
-    ifstream fileInput("anggota.txt");
+    ifstream fileInput("anggota.dat");
     if (fileInput.is_open()) {
         string line;
         cout << "\nDaftar Anggota:\n\n";
@@ -272,12 +272,12 @@ void daftaranggota() {
         cout << "\nFile berhasil dibuka!\n";
         fileInput.close();
     } else {
-        cout << "\nFile gagal dibuka!\n" << endl;
+        cout << "\nFile gagal dibuka!\n";
     }
 }
 
 void daftaranggotaaktif() {
-    ifstream fileInput("anggota.txt");
+    ifstream fileInput("anggota.dat");
     if (!fileInput.is_open()) {
         cout << "\nFile gagal dibuka!\n";
         return;
@@ -297,7 +297,7 @@ void daftaranggotaaktif() {
 }
 
 void carianggota() {
-    ifstream fileInput("anggota.txt");
+    ifstream fileInput("anggota.dat");
     if (fileInput.is_open()) {
         ANGGOTA cari;
         string carikode, teks;
@@ -338,8 +338,8 @@ void carianggota() {
 }
 
 void hapusanggota() {
-    ifstream fileInput("anggota.txt");
-    ofstream fileTemp("temp.txt");
+    ifstream fileInput("anggota.dat");
+    ofstream fileTemp("temp.dat");
     if (fileInput.is_open() && fileTemp.is_open()) {
         ANGGOTA data;
         string teks, hapus;
@@ -378,8 +378,8 @@ void hapusanggota() {
 
         fileInput.close();
         fileTemp.close();
-        remove("anggota.txt");
-        rename("temp.txt", "anggota.txt");
+        remove("anggota.dat");
+        rename("temp.dat", "anggota.dat");
 
         cout << "\nFile sudah diperbarui!\n";
     } else {
@@ -391,7 +391,7 @@ void urutbuku() {
     BUKU data[999];
     int n = 0;
 
-    ifstream file("buku.txt");
+    ifstream file("buku.dat");
     string baris;
 
     // load file id, isbn, judul, pengarang, penerbit, tahun terbit, stok
@@ -422,7 +422,7 @@ void urutbuku() {
     }
 
     // tulis ulang file setelah diurutkan
-    ofstream out("buku.txt");
+    ofstream out("buku.dat");
     for (int i = 0; i < n; i++) {
         out << data[i].id_buku << "|"
             << data[i].isbn << "|"
@@ -436,7 +436,7 @@ void urutbuku() {
 }
 
 void tambahBuku() {
-    ofstream file("buku.txt", ios::app);
+    ofstream file("buku.dat", ios::app);
     int jum;
     cout << "\nMasukkan jumlah buku yang akan ditambahkan: ";
     cin >> jum;
@@ -483,9 +483,9 @@ void tambahBuku() {
                  << b.penerbit << "|"
                  << b.tahun_terbit << "|"
                  << b.stok << endl;
-           cout << "\nData buku berhasil ditambahkan!\n";
+           cout << "\nData buku berhasil ditambahkan!\n\n";
         } else {
-            cout << "\nData buku gagal ditambahkan!\n";
+            cout << "\nData buku gagal ditambahkan!\n\n";
         }
     }
     file.close();
@@ -493,7 +493,7 @@ void tambahBuku() {
 }
 
 void tampilBuku() {
-    ifstream fileInput("buku.txt");
+    ifstream fileInput("buku.dat");
     if (fileInput.is_open()) {
         string line;
         cout << "\nDaftar Buku:\n\n";
@@ -508,7 +508,7 @@ void tampilBuku() {
 }
 
 void cariBuku() {
-    ifstream fileInput("buku.txt");
+    ifstream fileInput("buku.dat");
     if (fileInput.is_open()) {
         BUKU cari;
         string carijudul, teks;
@@ -550,8 +550,8 @@ void cariBuku() {
 }
 
 void editBuku() {
-    ifstream fileInput("buku.txt");
-    ofstream fileTemp("temp.txt");
+    ifstream fileInput("buku.dat");
+    ofstream fileTemp("temp.dat");
     string teks, cari;
     bool ketemu = false;
 
@@ -633,8 +633,8 @@ void editBuku() {
         fileInput.close();
         fileTemp.close();
 
-        remove("buku.txt");
-        rename("temp.txt", "buku.txt");
+        remove("buku.dat");
+        rename("temp.dat", "buku.dat");
 
         if (!ketemu) {
             cout << "\nData tidak ditemukan.\n";
@@ -646,9 +646,9 @@ void editBuku() {
 }
 
 void hapusBuku() {
-    ifstream fileInput("buku.txt");
-    ofstream fileTemp("buku_temp.txt");      // file sementara untuk buku tersisa
-    ofstream fileHapus("hapusbuku.txt", ios::app); // file untuk buku yang dihapus
+    ifstream fileInput("buku.dat");
+    ofstream fileTemp("buku_temp.dat");      // file sementara untuk buku tersisa
+    ofstream fileHapus("hapusbuku.dat", ios::app); // file untuk buku yang dihapus
 
     if (fileInput.is_open() && fileTemp.is_open() && fileHapus.is_open()) {
         BUKU data;
@@ -681,7 +681,7 @@ void hapusBuku() {
                          << data.tahun_terbit << "|"
                          << data.sstok << endl;
             } else {
-                // tulis ke file hapusbuku.txt
+                // tulis ke file hapusbuku.dat
                 fileHapus << data.id_buku << "|"
                           << data.isbn << "|"
                           << data.judul << "|"
@@ -703,18 +703,18 @@ void hapusBuku() {
         fileHapus.close();
 
         // replace file lama dengan file sementara
-        remove("buku.txt");           // hapus file lama
-        rename("buku_temp.txt", "buku.txt"); // ganti dengan file baru
+        remove("buku.dat");           // hapus file lama
+        rename("buku_temp.dat", "buku.dat"); // ganti dengan file baru
 
-        cout << "\nFile buku.txt sudah diperbarui!\n";
-        cout << "Buku yang dihapus disimpan di hapusbuku.txt\n";
+        cout << "\nFile buku.dat sudah diperbarui!\n";
+        cout << "Buku yang dihapus disimpan di hapusbuku.dat\n";
     } else {
         cout << "\nFile gagal dibuka!\n";
     }
 }
 
 bool cekkeaktifan(string id_anggota) {
-    ifstream file("anggota.txt");
+    ifstream file("anggota.dat");
     if (!file.is_open()) {
         cout << "FILE TIDAK DITEMUKAN";
         return false;
@@ -740,7 +740,7 @@ bool cekkeaktifan(string id_anggota) {
 }
 
 bool cekstok(string id_buku) {
-    ifstream file("buku.txt");
+    ifstream file("buku.dat");
     if (!file.is_open()) {
         cout << "FILE TIDAK DAPAT DIBUKA";
         return false;
@@ -767,12 +767,12 @@ bool cekstok(string id_buku) {
 }
 
 void kurangistok(string id_buku) {
-    ifstream file("buku.txt");
+    ifstream file("buku.dat");
     if (!file.is_open()) {
         cout << "gagal";
         return;
     }
-    ofstream t("t.txt");
+    ofstream t("t.dat");
     if (!t.is_open()) {
         cout << "gagal";
         return;
@@ -797,17 +797,17 @@ void kurangistok(string id_buku) {
     }
     file.close();
     t.close();
-    remove("buku.txt");
-    rename("t.txt", "buku.txt");
+    remove("buku.dat");
+    rename("t.dat", "buku.dat");
 }
 
 void tambahstok(string id_buku) {
-    ifstream file("buku.txt");
+    ifstream file("buku.dat");
     if (!file.is_open()) {
         cout << "gagal";
         return;
     }
-    ofstream t("t.txt");
+    ofstream t("t.dat");
     if (!t.is_open()) {
         cout << "gagal";
         return;
@@ -833,8 +833,8 @@ void tambahstok(string id_buku) {
     }
     file.close();
     t.close();
-    remove("buku.txt");
-    rename("t.txt", "buku.txt");
+    remove("buku.dat");
+    rename("t.dat", "buku.dat");
 }
 
 string formatTanggal(int d, int m, int y) {
@@ -880,7 +880,7 @@ int selisihTanggal(string t1, string t2) {
 
 void tambahpeminjaman() {
     PEMINJAMAN p;
-    ofstream file("peminjaman.txt", ios::app);
+    ofstream file("peminjaman.dat", ios::app);
     if (!file.is_open()) {
         cout << "gagal";
         return;
@@ -894,18 +894,18 @@ void tambahpeminjaman() {
         if (p.id_peminjam.length() != 6) cout << "ID harus 6 digit!\n";
     } while (p.id_peminjam.length() != 6);
     do {
-        cout << "\nID Anggota (6 digit)    : ";
+        cout << "ID Anggota (6 digit)    : ";
         getline(cin, p.id_anggota);
         if (p.id_anggota.length() != 6) cout << "ID harus 6 digit!\n";
     } while (p.id_anggota.length() != 6);
     do {
-        cout << "\nID Buku (6 digit)       : ";
+        cout << "ID Buku (6 digit)       : ";
         getline(cin, p.id_buku);
         if (p.id_buku.length() != 6) cout << "ID harus 6 digit!\n";
     } while (p.id_buku.length() != 6);
-    cout << "ID Petugas : ";
+
     do {
-        cout << "\nID Petugas (6 digit)    : ";
+        cout << "ID Petugas (6 digit)    : ";
         getline(cin, p.id_petugas);
         if (p.id_petugas.length() != 6) cout << "ID harus 6 digit!\n";
     } while (p.id_petugas.length() != 6);
@@ -939,7 +939,7 @@ void tambahpeminjaman() {
 }
 
 void tampilpeminjaman() {
-    ifstream file("peminjaman.txt");
+    ifstream file("peminjaman.dat");
     if (!file.is_open()) {
         cout << "\nGagal.\n";
         return;
@@ -968,7 +968,7 @@ void tampilpeminjaman() {
 }
 
 void caripeminjaman() {
-    ifstream file("peminjaman.txt");
+    ifstream file("peminjaman.dat");
     if (!file.is_open()) {
         cout << "\nGagal.\n";
         return;
@@ -998,12 +998,12 @@ float hitungdenda(int telat) {
 }
 
 void pengembalianbuku() {
-    fstream file("peminjaman.txt", ios::in);
+    fstream file("peminjaman.dat", ios::in);
     if (!file.is_open()) {
         cout << "\nGagal.\n";
         return;
     }
-    ofstream tt("tt.txt");
+    ofstream tt("tt.dat");
     if (!tt.is_open()) {
         cout << "\nGagal.\n";
         return;
@@ -1019,7 +1019,7 @@ void pengembalianbuku() {
     if (cariID.empty()) {
         cout << "\nID Peminjaman tidak ditemukan.\n";
         file.close();
-        remove("tt.txt");
+        remove("tt.dat");
         return;
     }
 
@@ -1067,8 +1067,8 @@ void pengembalianbuku() {
     file.close();
     tt.close();
 
-    remove("peminjaman.txt");
-    rename("tt.txt", "peminjaman.txt");
+    remove("peminjaman.dat");
+    rename("tt.dat", "peminjaman.dat");
 
     if (!ketemu)
         cout << "\nID Peminjaman tidak ditemukan.\n";
